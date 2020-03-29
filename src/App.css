@@ -36,3 +36,20 @@
     transform: rotate(360deg);
   }
 }
+
+#undo {
+  font-size: 20px;
+  position: absolute;
+  background: red;
+  top: 10px;
+  right: 70px;
+  z-index: 10;
+}
+#addElement {
+  font-size: 20px;
+  position: absolute;
+  background: red;
+  top: 10px;
+  right: 10px;
+  z-index: 10;
+}
