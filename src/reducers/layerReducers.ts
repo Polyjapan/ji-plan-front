@@ -1,7 +1,23 @@
-import { List } from "immutable";
+import { List, Map } from "immutable";
 import Element from "../classes/Element";
 import LayerState from "./LayerState";
-import LayerActionTypes, { ADD_ELEMENT } from "./LayerActionTypes";
+import Layer from "../classes/Layer";
+import LayerActionTypes, {
+  ADD_ELEMENT,
+  SET_SELECTED_LAYER,
+  MOVE_ELEMENT,
+  ADD_CUSTOM_DATA,
+  TRANSFORM_ELEMENT,
+} from "./LayerActionTypes";
+import { generateRandomId } from "../utils/utils";
+
+const findElementById = (state: any, layerId: number, elementId: string) => {
+  return state
+    .getIn(["layers", layerId, "elements"])
+    .findIndex((el: Element) => {
+      return el.get("id") === elementId;
+    });
+};
 
 // REDUCER
 
@@ -12,7 +28,13 @@ const initialElements = List([
     width: 100,
     height: 100,
     fill: "red",
-    id: "rect1",
+    id: "rect1id",
+    category: "rect",
+    name: "rect1",
+    customData: Map({
+      key: "value",
+      prop: "ddd",
+    }),
   }),
   new Element({
     x: 250,
@@ -20,32 +42,82 @@ const initialElements = List([
     width: 100,
     height: 100,
     fill: "green",
-    id: "rect2",
+    id: "rect2id",
+    category: "rect",
+    name: "rect2",
+    customData: Map(),
+    rotation: 10,
   }),
 ]);
 
-const initialState = new LayerState({ elements: initialElements });
+const initialLayers = List([
+  new Layer({ name: "Pro", elements: initialElements }),
+  new Layer({ name: "Déco" }),
+]);
+
+const initialState = new LayerState({ layers: initialLayers, selected: 0 });
 
 export function layerReducer(
   state = initialState,
   action: LayerActionTypes
 ): LayerState {
-  switch (action.type) {
+  const { type, payload } = action;
+  switch (type) {
     case ADD_ELEMENT: {
-      const el: Element = new Element({
+      const selectedLayer = state.get("selected").valueOf();
+      const id = generateRandomId();
+      const el = Map({
         x: 150,
         y: 150,
         width: 100,
         height: 100,
-        fill: "orange",
-        id: "rect3",
+        fill: selectedLayer ? "orange" : "blue",
+        id,
+        name: id,
+        customData: Map(),
       });
-      return state.updateIn(["elements"], (elements: Element[]) =>
-        elements.push(el)
+
+      return state.updateIn(
+        ["layers", selectedLayer, "elements"],
+        (elements: List<any>) => elements.push(el)
+      );
+    }
+    case SET_SELECTED_LAYER: {
+      return state.set("selected", payload);
+    }
+    case MOVE_ELEMENT: {
+      const selectedLayer = state.get("selected").valueOf();
+      const { id: elementId, x, y } = payload;
+      const index = findElementById(state, selectedLayer, elementId);
+      return state
+        .setIn(["layers", selectedLayer, "elements", index, "x"], x)
+        .setIn(["layers", selectedLayer, "elements", index, "y"], y);
+    }
+    case TRANSFORM_ELEMENT: {
+      const selectedLayer = state.get("selected").valueOf();
+      const { rotation, x, y, height, width, id } = payload;
+      const index = findElementById(state, selectedLayer, id);
+      return state
+        .setIn(["layers", selectedLayer, "elements", index, "width"], width)
+        .setIn(["layers", selectedLayer, "elements", index, "height"], height)
+        .setIn(["layers", selectedLayer, "elements", index, "x"], x)
+        .setIn(["layers", selectedLayer, "elements", index, "y"], y)
+        .setIn(
+          ["layers", selectedLayer, "elements", index, "rotation"],
+          rotation
+        );
+    }
+    case ADD_CUSTOM_DATA: {
+      const { key, value, id: elementId, layerId } = payload;
+      const index = findElementById(state, layerId, elementId);
+      console.log("index", index);
+      return state.setIn(
+        ["layers", layerId, "elements", index, "customData", key],
+        value
       );
     }
     default:
-      console.log("action.type", action.type);
+      console.log("action.type", type);
       return initialState;
   }
 }

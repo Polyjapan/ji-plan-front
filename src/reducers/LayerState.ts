@@ -1,18 +1,16 @@
 import { Record, List } from "immutable";
-import Element from "../classes/Element";
+import Layer from "../classes/Layer";
 
 interface ILayerState {
-  elements: List<Element>;
+  layers: List<Layer>;
+  selected?: number;
 }
 
 const LayerStateRecord = Record({
-  elements: List(),
+  layers: List<Layer>([new Layer({ elements: List() })]),
+  selected: 0,
 });
 
-class LayerState extends LayerStateRecord implements ILayerState {
-  constructor(props: ILayerState) {
-    super(props);
-  }
-}
+class LayerState extends LayerStateRecord implements ILayerState {}
 
 export default LayerState;

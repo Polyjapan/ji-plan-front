@@ -1,4 +1,4 @@
-import { Record } from "immutable";
+import { Record, Map } from "immutable";
 
 interface IElement {
   x: number;
@@ -7,6 +7,10 @@ interface IElement {
   height: number;
   fill: string;
   id: string;
+  category: string;
+  name: string;
+  customData?: Map<string, any>;
+  rotation?: number;
 }
 
 const ElementRecord = Record({
@@ -16,12 +20,12 @@ const ElementRecord = Record({
   height: 100,
   fill: "red",
   id: "defaultid",
+  category: "rect",
+  name: "defaultname",
+  customData: Map<string, any>(),
+  rotation: 0,
 });
 
-class Element extends ElementRecord implements IElement {
-  constructor(props: IElement) {
-    super(props);
-  }
-}
+class Element extends ElementRecord implements IElement {}
 
 export default Element;

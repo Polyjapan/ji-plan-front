@@ -1,0 +1,49 @@
+#layerManager {
+  background: lightgrey;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  z-index: 5;
+  width: 25%;
+  padding: 10px;
+}
+
+.layerManagerElement {
+  background: white;
+  border: 1px solid black;
+}
+.layerManagerElement:hover {
+  cursor: pointer;
+}
+
+.selected {
+  border-width: 5px;
+}
+
+.layerElement {
+  border-top: 1px solid black;
+  text-align: left;
+}
+
+.category {
+  padding: 5px;
+  border: 1px solid black;
+  margin-right: 5px;
+  display: inline-block;
+  width: 20%;
+}
+
+.name {
+  font-weight: bold;
+  display: inline-block;
+  width: 50%;
+}
+
+.addCustomData input {
+  display: inline-block;
+  width: 40%;
+}
+
+.addCustomData button {
+  width: 10%;
+}

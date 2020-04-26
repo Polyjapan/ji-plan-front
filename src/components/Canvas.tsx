@@ -1,36 +1,48 @@
 import React from "react";
+import { List } from "immutable";
 import { Stage, Layer } from "react-konva";
 import { connect } from "react-redux";
 import Background from "./Background";
 import AddButton from "./AddButton";
-import UndoButton from "./UndoButton";
+import UndoButton from "./layerManager/UndoButton";
 import Rectangle from "./elements/Rectangle";
 import { PRESENT } from "../config/constants";
+import Element from "../classes/Element";
+import LayerClass from "../classes/Layer";
+import LayerManager from "./layerManager/LayerManager";
+import { moveElement, transformElement } from "../actions/layers";
 
 const mapDispatchToProps: any = {
   // dispatchGetElements: getElements,
+  dispatchMoveElement: moveElement,
+  dispatchTransformElement: transformElement,
 };
 const mapStateToProps = ({ layers }: any) => ({
-  elements: layers[PRESENT].get("elements"),
+  layers: layers[PRESENT].get("layers"), //.toJS(),
+  selectedLayer: layers[PRESENT].get("selected"),
 });
 
 class Canvas extends React.Component<any, any> {
-  private scaleBy: number = 1.01;
+  private scaleBy = 1.01;
 
   state = {
     selectedId: null,
   };
 
   public componentDidMount() {
-    console.log("fjkmcd");
     // const { dispatchGetElements } = this.props;
     // dispatchGetElements();
   }
 
   public render() {
-    const { elements } = this.props;
+    const {
+      layers,
+      dispatchMoveElement,
+      dispatchTransformElement,
+      selectedLayer,
+    } = this.props;
 
-    if (!elements || elements.size === 0) {
+    if (!layers || layers.size === 0) {
       return null;
     }
 
@@ -45,18 +57,18 @@ class Canvas extends React.Component<any, any> {
     const onWheelHandler = (e: any) => {
       const stage = e.target.getStage();
       e.evt.preventDefault();
-      var oldScale = stage.scaleX();
+      const oldScale = stage.scaleX();
 
-      var mousePointTo = {
+      const mousePointTo = {
         x: stage.getPointerPosition().x / oldScale - stage.x() / oldScale,
         y: stage.getPointerPosition().y / oldScale - stage.y() / oldScale,
       };
 
-      var newScale =
+      const newScale =
         e.evt.deltaY > 0 ? oldScale * this.scaleBy : oldScale / this.scaleBy;
       stage.scale({ x: newScale, y: newScale });
 
-      var newPos = {
+      const newPos = {
         x:
           -(mousePointTo.x - stage.getPointerPosition().x / newScale) *
           newScale,
@@ -74,6 +86,9 @@ class Canvas extends React.Component<any, any> {
       <>
         <UndoButton />
         <AddButton />
+
+        <LayerManager />
+
         <Stage
           width={window.innerWidth}
           height={window.innerHeight}
@@ -85,25 +100,33 @@ class Canvas extends React.Component<any, any> {
           <Layer>
             <Background />
           </Layer>
-          <Layer>
-            {elements.map((rect: any, i: number) => {
-              return (
-                <Rectangle
-                  key={i}
-                  shapeProps={rect.toJS()}
-                  isSelected={rect.get("id") === selectedId}
-                  onSelect={() => {
-                    this.setState({ selectedId: rect.get("id") });
-                  }}
-                  onChange={(newAttrs: any) => {
-                    const rects = elements.slice();
-                    rects[i] = newAttrs;
-                    // this.setState({elements: rects});
-                  }}
-                />
-              );
-            })}
-          </Layer>
+          {layers.map((layer: LayerClass, i: number) => {
+            const elements: List<Element> = layer.get("elements");
+            return (
+              <Layer key={i} name={layer.get("name")}>
+                {elements.map((rect: Element, k: number) => {
+                  const rectId = rect.get("id");
+                  return (
+                    <Rectangle
+                      key={k}
+                      shapeProps={rect.toJS()}
+                      isSelected={rectId === selectedId}
+                      isLayerSelected={i === selectedLayer}
+                      onSelect={() => {
+                        this.setState({ selectedId: rectId });
+                      }}
+                      onMove={(payload: any) => {
+                        dispatchMoveElement(payload);
+                      }}
+                      onTransform={(payload: any) => {
+                        dispatchTransformElement(payload);
+                      }}
+                    />
+                  );
+                })}
+              </Layer>
+            );
+          })}
         </Stage>
       </>
     );

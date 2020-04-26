@@ -1,27 +1,35 @@
 import React from "react";
 import { Rect, Transformer } from "react-konva";
 
+export type Props = {
+  key?: number;
+  isLayerSelected: boolean;
+  shapeProps: any;
+  isSelected: boolean;
+  onSelect: any;
+  onMove: any;
+  onTransform: any;
+};
+
+// <props, state>
 const Rectangle = ({
   shapeProps,
   isSelected,
   onSelect,
-  onChange,
-}: {
-  shapeProps: any;
-  isSelected: boolean;
-  onSelect: Function;
-  onChange: Function;
-}) => {
+  onMove,
+  onTransform,
+  isLayerSelected,
+}: Props) => {
   const shapeRef: any = React.useRef();
   const trRef: any = React.useRef();
 
   React.useEffect(() => {
-    if (isSelected) {
+    if (isLayerSelected && isSelected) {
       // we need to attach transformer manually
       trRef.current.setNode(shapeRef.current);
       trRef.current.getLayer().batchDraw();
     }
-  }, [isSelected]);
+  }, [isSelected, isLayerSelected]);
 
   return (
     <React.Fragment>
@@ -30,12 +38,12 @@ const Rectangle = ({
         onTap={onSelect}
         ref={shapeRef}
         {...shapeProps}
-        draggable
+        draggable={isLayerSelected}
         onDragEnd={(e) => {
-          onChange({
-            ...shapeProps,
+          onMove({
             x: e.target.x(),
             y: e.target.y(),
+            id: shapeProps.id,
           });
         }}
         onTransformEnd={(e) => {
@@ -50,17 +58,18 @@ const Rectangle = ({
           // we will reset it back
           node.scaleX(1);
           node.scaleY(1);
-          onChange({
+          onTransform({
             ...shapeProps,
             x: node.x(),
             y: node.y(),
             // set minimal value
             width: Math.max(5, node.width() * scaleX),
             height: Math.max(node.height() * scaleY),
+            rotation: node.rotation(),
           });
         }}
       />
-      {isSelected && (
+      {isLayerSelected && isSelected && (
         <Transformer
           ref={trRef}
           boundBoxFunc={(oldBox, newBox) => {
