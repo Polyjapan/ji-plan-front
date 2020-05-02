@@ -17,10 +17,7 @@ module.exports =  {
   rules:  {
     // Place to specify ESLint rules. Can be used to overwrite rules specified from the extended configs
     // e.g. "@typescript-eslint/explicit-function-return-type": "off",
-    "interface-name": [
-      true,
-      "never-prefix"
-    ]
+    "@typescript-eslint/interface-name-prefix": "off"
   },
   settings:  {
     react:  {

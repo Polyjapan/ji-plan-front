@@ -1,36 +1,49 @@
-import { Dispatch } from "redux";
 import LayerActionTypes, {
-  GET_ELEMENTS,
   SET_SELECTED_LAYER,
   TRANSFORM_ELEMENT,
   ADD_CUSTOM_DATA,
   MOVE_ELEMENT,
+  SET_CUSTOM_DATA,
+  MoveElementPayloadType,
+  TransformElementPayloadType,
+  AddCustomDataPayloadType,
+  SetCustomDataPayloadType,
 } from "../reducers/LayerActionTypes";
+import { ThunkAction } from "redux-thunk";
+import { RootState } from "../reducers";
 
 // export const getElements = () => (dispatch: Dispatch<LayerActionTypes>) => {
 //   dispatch({ type: GET_ELEMENTS });
 // };
 
-export const setSelectedLayer = (idx: number) => (
-  dispatch: Dispatch<LayerActionTypes>
-) => {
+type LayerAction = ThunkAction<void, RootState, null, LayerActionTypes>;
+
+export const setSelectedLayer = (idx: number): LayerAction => (
+  dispatch
+): void => {
   dispatch({ type: SET_SELECTED_LAYER, payload: idx });
 };
 
-export const moveElement = (payload: any) => (
-  dispatch: Dispatch<LayerActionTypes>
-) => {
+export const moveElement = (payload: MoveElementPayloadType): LayerAction => (
+  dispatch
+): void => {
   dispatch({ type: MOVE_ELEMENT, payload });
 };
 
-export const transformElement = (payload: any) => (
-  dispatch: Dispatch<LayerActionTypes>
-) => {
+export const transformElement = (
+  payload: TransformElementPayloadType
+): LayerAction => (dispatch): void => {
   dispatch({ type: TRANSFORM_ELEMENT, payload });
 };
 
-export const addCustomData = (payload: any) => (
-  dispatch: Dispatch<LayerActionTypes>
-) => {
+export const addCustomData = (
+  payload: AddCustomDataPayloadType
+): LayerAction => (dispatch): void => {
   dispatch({ type: ADD_CUSTOM_DATA, payload });
+};
+
+export const setCustomData = (
+  payload: SetCustomDataPayloadType
+): LayerAction => (dispatch): void => {
+  dispatch({ type: SET_CUSTOM_DATA, payload });
 };

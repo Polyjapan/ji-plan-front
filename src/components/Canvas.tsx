@@ -1,7 +1,7 @@
 import React from "react";
-import { List } from "immutable";
-import { Stage, Layer } from "react-konva";
-import { connect } from "react-redux";
+import { List, Map } from "immutable";
+import { Stage, Layer, KonvaNodeEvents } from "react-konva";
+import { connect, ConnectedProps } from "react-redux";
 import Background from "./Background";
 import AddButton from "./AddButton";
 import UndoButton from "./layerManager/UndoButton";
@@ -11,18 +11,33 @@ import Element from "../classes/Element";
 import LayerClass from "../classes/Layer";
 import LayerManager from "./layerManager/LayerManager";
 import { moveElement, transformElement } from "../actions/layers";
+import {
+  MoveElementPayloadType,
+  TransformElementPayloadType,
+} from "../reducers/LayerActionTypes";
+import { RootState } from "../reducers";
 
-const mapDispatchToProps: any = {
+const mapDispatchToProps = {
   // dispatchGetElements: getElements,
   dispatchMoveElement: moveElement,
   dispatchTransformElement: transformElement,
 };
-const mapStateToProps = ({ layers }: any) => ({
+
+const mapStateToProps = ({ layers }: RootState) => ({
   layers: layers[PRESENT].get("layers"), //.toJS(),
   selectedLayer: layers[PRESENT].get("selected"),
 });
 
-class Canvas extends React.Component<any, any> {
+const connector = connect(mapStateToProps, mapDispatchToProps);
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type Props = PropsFromRedux & {};
+
+type State = {
+  selectedId: string | null;
+};
+
+class Canvas extends React.Component<Props, State> {
   private scaleBy = 1.01;
 
   state = {
@@ -55,7 +70,8 @@ class Canvas extends React.Component<any, any> {
     };
 
     const onWheelHandler = (e: any) => {
-      const stage = e.target.getStage();
+      const target = e.target;
+      const stage = target.getStage();
       e.evt.preventDefault();
       const oldScale = stage.scaleX();
 
@@ -109,16 +125,16 @@ class Canvas extends React.Component<any, any> {
                   return (
                     <Rectangle
                       key={k}
-                      shapeProps={rect.toJS()}
+                      shapeProps={rect}
                       isSelected={rectId === selectedId}
                       isLayerSelected={i === selectedLayer}
                       onSelect={() => {
                         this.setState({ selectedId: rectId });
                       }}
-                      onMove={(payload: any) => {
+                      onMove={(payload: MoveElementPayloadType) => {
                         dispatchMoveElement(payload);
                       }}
-                      onTransform={(payload: any) => {
+                      onTransform={(payload: TransformElementPayloadType) => {
                         dispatchTransformElement(payload);
                       }}
                     />
@@ -133,6 +149,6 @@ class Canvas extends React.Component<any, any> {
   }
 }
 
-const ConnectedComponent = connect(mapStateToProps, mapDispatchToProps)(Canvas);
+const ConnectedComponent = connector(Canvas);
 
 export default ConnectedComponent;

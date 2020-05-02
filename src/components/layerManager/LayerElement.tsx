@@ -3,15 +3,13 @@ import Element from "../../classes/Element";
 import CustomDataForm from "./CustomDataForm";
 import PropertyInput from "./PropertyInput";
 
-const LayerElement = ({
-  element,
-  layerId,
-}: {
+type Props = {
   element: Element;
   layerId: number;
-}) => {
+};
+
+const LayerElement = ({ element, layerId }: Props) => {
   const customData = element.get("customData");
-  console.log("customData", customData);
 
   return (
     <div data-id={element.get("id")} className="layerElement">
@@ -20,7 +18,13 @@ const LayerElement = ({
 
       {!customData.isEmpty() &&
         Object.entries(customData.toJS()).map(([key, value]) => (
-          <PropertyInput key={key} keyName={key} value={value} />
+          <PropertyInput
+            layerId={layerId}
+            elementId={element.get("id")}
+            key={key}
+            keyName={key}
+            value={value}
+          />
         ))}
       <CustomDataForm elementId={element.get("id")} layerId={layerId} />
     </div>

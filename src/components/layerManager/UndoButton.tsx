@@ -1,22 +1,23 @@
 import React from "react";
 import { Dispatch } from "redux";
-import { ActionCreators } from "redux-undo";
-import { connect } from "react-redux";
+import { ActionCreators, ActionTypes } from "redux-undo";
+import { connect, ConnectedProps } from "react-redux";
 
-const mapDispatchToProps: any = {
-  dispatchUndo: () => (dispatch: Dispatch<any>) =>
-    dispatch(ActionCreators.undo()),
+const undo = ActionCreators.undo();
+
+const mapDispatchToProps = {
+  dispatchUndo: () => (dispatch: Dispatch<typeof undo>) => dispatch(undo),
 };
 
-type MyProps =
-  // ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps> & {
-    label: string;
-  };
-type MyState = {
+const connector = connect(null, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+type Props = PropsFromRedux & {};
+type State = {
   // count: number; // like this
 };
-class UndoButton extends React.Component<MyProps, MyState> {
+class UndoButton extends React.Component<Props, State> {
   private undo = () => {
     const { dispatchUndo } = this.props;
     dispatchUndo();
@@ -31,6 +32,6 @@ class UndoButton extends React.Component<MyProps, MyState> {
   };
 }
 
-const ConnectedComponent = connect(null, mapDispatchToProps)(UndoButton);
+const ConnectedComponent = connector(UndoButton);
 
 export default ConnectedComponent;

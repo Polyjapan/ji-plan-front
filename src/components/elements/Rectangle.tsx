@@ -1,10 +1,11 @@
 import React from "react";
 import { Rect, Transformer } from "react-konva";
+import Element from "../../classes/Element";
 
 export type Props = {
   key?: number;
   isLayerSelected: boolean;
-  shapeProps: any;
+  shapeProps: Element;
   isSelected: boolean;
   onSelect: any;
   onMove: any;
@@ -37,13 +38,13 @@ const Rectangle = ({
         onClick={onSelect}
         onTap={onSelect}
         ref={shapeRef}
-        {...shapeProps}
+        {...shapeProps.toJS()}
         draggable={isLayerSelected}
         onDragEnd={(e) => {
           onMove({
             x: e.target.x(),
             y: e.target.y(),
-            id: shapeProps.id,
+            id: shapeProps.get("id"),
           });
         }}
         onTransformEnd={(e) => {

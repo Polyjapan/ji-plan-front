@@ -3,7 +3,7 @@ import { connect, ConnectedProps } from "react-redux";
 import "./LayerManager.css";
 import { addCustomData } from "../../actions/layers";
 
-const mapDispatchToProps: any = {
+const mapDispatchToProps = {
   dispatchAddCustomData: addCustomData,
 };
 
@@ -16,7 +16,12 @@ export type Props = PropsFromRedux & {
   elementId: string;
 };
 
-class CustomDataForm extends React.Component<Props, any> {
+type State = {
+  key: string | undefined;
+  value: string | undefined;
+};
+
+class CustomDataForm extends React.Component<Props, State> {
   private _keyInput: HTMLInputElement | null = null;
   private _valueInput: HTMLInputElement | null = null;
 
@@ -25,7 +30,7 @@ class CustomDataForm extends React.Component<Props, any> {
     value: undefined,
   };
 
-  handeOnClick = (e: any) => {
+  handeOnClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     const { layerId, elementId, dispatchAddCustomData } = this.props;
     if (this._keyInput && this._valueInput) {
       if (!this._keyInput.value.length || !this._valueInput.value.length) {
@@ -66,6 +71,6 @@ class CustomDataForm extends React.Component<Props, any> {
   }
 }
 
-const ConnectedComponent: any = connector(CustomDataForm);
+const ConnectedComponent = connector(CustomDataForm);
 
 export default ConnectedComponent;

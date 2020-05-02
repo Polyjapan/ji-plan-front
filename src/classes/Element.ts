@@ -9,6 +9,7 @@ interface IElement {
   id: string;
   category: string;
   name: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   customData?: Map<string, any>;
   rotation?: number;
 }
@@ -22,6 +23,7 @@ const ElementRecord = Record({
   id: "defaultid",
   category: "rect",
   name: "defaultname",
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   customData: Map<string, any>(),
   rotation: 0,
 });

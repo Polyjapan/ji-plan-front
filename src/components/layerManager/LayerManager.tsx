@@ -1,23 +1,34 @@
 import React from "react";
 import { List } from "immutable";
 import clsx from "clsx";
-import { connect } from "react-redux";
+import { connect, ConnectedProps } from "react-redux";
 import { PRESENT } from "../../config/constants";
 import Element from "../../classes/Element";
 import LayerClass from "../../classes/Layer";
 import "./LayerManager.css";
 import { setSelectedLayer } from "../../actions/layers";
 import LayerElement from "./LayerElement";
+import { RootState } from "../../reducers";
+import Layer from "../../classes/Layer";
 
-const mapDispatchToProps: any = {
+const mapDispatchToProps = {
   dispatchSetSelectedLayer: setSelectedLayer,
 };
-const mapStateToProps = ({ layers }: any) => ({
+
+const mapStateToProps = ({ layers }: RootState) => ({
   layers: layers[PRESENT].get("layers"), //.toJS(),
   selected: layers[PRESENT].get("selected"),
 });
 
-class LayerManager extends React.Component<any, any> {
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type Props = PropsFromRedux & {
+  layers: List<Layer>;
+  selected: number;
+};
+
+class LayerManager extends React.Component<Props> {
   layerOnClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const { dispatchSetSelectedLayer } = this.props;
     dispatchSetSelectedLayer(Number(e.currentTarget.dataset.id));
@@ -55,9 +66,6 @@ class LayerManager extends React.Component<any, any> {
   }
 }
 
-const ConnectedComponent = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(LayerManager);
+const ConnectedComponent = connector(LayerManager);
 
 export default ConnectedComponent;

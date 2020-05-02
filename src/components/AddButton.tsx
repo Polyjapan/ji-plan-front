@@ -1,6 +1,6 @@
 import React from "react";
 import { Dispatch } from "redux";
-import { connect } from "react-redux";
+import { connect, ConnectedProps } from "react-redux";
 import LayerActionTypes, { ADD_ELEMENT } from "../reducers/LayerActionTypes";
 
 // ACTIONS
@@ -8,23 +8,17 @@ const addRect = () => (dispatch: Dispatch<LayerActionTypes>) => {
   dispatch({ type: ADD_ELEMENT, payload: "hey" });
 };
 
-// Clock has no properties, but the current state is of type ClockState
-// The generic parameters in the Component typing allow to pass props
-// and state. Since we don't have props, we pass an empty object.
-
-const mapDispatchToProps: any = {
+const mapDispatchToProps = {
   dispatchAddRect: addRect,
 };
 
-type MyProps =
-  // ReturnType<typeof mapStateToProps> &
-  ReturnType<typeof mapDispatchToProps> & {
-    label: string;
-  };
-type MyState = {
+const connector = connect(null, mapDispatchToProps);
+
+type Props = ConnectedProps<typeof connector> & {};
+type State = {
   // count: number; // like this
 };
-class AddButton extends React.Component<MyProps, MyState> {
+class AddButton extends React.Component<Props, State> {
   private addRect = () => {
     const { dispatchAddRect } = this.props;
     dispatchAddRect();
@@ -39,6 +33,6 @@ class AddButton extends React.Component<MyProps, MyState> {
   };
 }
 
-const ConnectedComponent = connect(null, mapDispatchToProps)(AddButton);
+const ConnectedComponent = connector(AddButton);
 
 export default ConnectedComponent;

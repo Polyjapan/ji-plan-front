@@ -8,10 +8,15 @@ import LayerActionTypes, {
   MOVE_ELEMENT,
   ADD_CUSTOM_DATA,
   TRANSFORM_ELEMENT,
+  SET_CUSTOM_DATA,
 } from "./LayerActionTypes";
 import { generateRandomId } from "../utils/utils";
 
-const findElementById = (state: any, layerId: number, elementId: string) => {
+const findElementById = (
+  state: LayerState,
+  layerId: number,
+  elementId: string
+) => {
   return state
     .getIn(["layers", layerId, "elements"])
     .findIndex((el: Element) => {
@@ -66,7 +71,7 @@ export function layerReducer(
     case ADD_ELEMENT: {
       const selectedLayer = state.get("selected").valueOf();
       const id = generateRandomId();
-      const el = Map({
+      const el = new Element({
         x: 150,
         y: 150,
         width: 100,
@@ -79,7 +84,7 @@ export function layerReducer(
 
       return state.updateIn(
         ["layers", selectedLayer, "elements"],
-        (elements: List<any>) => elements.push(el)
+        (elements: List<Element>) => elements.push(el)
       );
     }
     case SET_SELECTED_LAYER: {
@@ -108,6 +113,15 @@ export function layerReducer(
         );
     }
     case ADD_CUSTOM_DATA: {
+      const { key, value, id: elementId, layerId } = payload;
+      const index = findElementById(state, layerId, elementId);
+      console.log("index", index);
+      return state.setIn(
+        ["layers", layerId, "elements", index, "customData", key],
+        value
+      );
+    }
+    case SET_CUSTOM_DATA: {
       const { key, value, id: elementId, layerId } = payload;
       const index = findElementById(state, layerId, elementId);
       console.log("index", index);

@@ -5,6 +5,7 @@ export const SET_SELECTED_LAYER = "SET_SELECTED_LAYER";
 export const MOVE_ELEMENT = "MOVE_ELEMENT";
 export const ADD_CUSTOM_DATA = "ADD_CUSTOM_DATA";
 export const TRANSFORM_ELEMENT = "TRANSFORM_ELEMENT";
+export const SET_CUSTOM_DATA = "SET_CUSTOM_DATA";
 
 interface AddElementAction {
   type: typeof ADD_ELEMENT;
@@ -24,19 +25,50 @@ interface SelectLayerAction {
   payload: number;
 }
 
+export type MoveElementPayloadType = {
+  id: string;
+  x: number;
+  y: number;
+};
+
 interface MoveElementAction {
   type: typeof MOVE_ELEMENT;
-  payload: any;
+  payload: MoveElementPayloadType;
 }
 
+export type TransformElementPayloadType = {
+  id: string;
+  width: string;
+  height: string;
+  rotation: string;
+  x: number;
+  y: number;
+};
 interface TransformElementAction {
   type: typeof TRANSFORM_ELEMENT;
-  payload: any;
+  payload: TransformElementPayloadType;
 }
 
+export type AddCustomDataPayloadType = {
+  key: string;
+  value: string;
+  id: string;
+  layerId: number;
+};
 interface AddCustomDataAction {
   type: typeof ADD_CUSTOM_DATA;
-  payload: any;
+  payload: AddCustomDataPayloadType;
+}
+
+export type SetCustomDataPayloadType = {
+  key: string;
+  value: string;
+  id: string;
+  layerId: number;
+};
+interface SetCustomDataAction {
+  type: typeof SET_CUSTOM_DATA;
+  payload: SetCustomDataPayloadType;
 }
 
 type LayerActionTypes =
@@ -45,6 +77,7 @@ type LayerActionTypes =
   | SelectLayerAction
   | MoveElementAction
   | TransformElementAction
-  | AddCustomDataAction;
+  | AddCustomDataAction
+  | SetCustomDataAction;
 
 export default LayerActionTypes;

@@ -1,10 +1,10 @@
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import "./LayerManager.css";
-import { addCustomData } from "../../actions/layers";
+import { setCustomData } from "../../actions/layers";
 
-const mapDispatchToProps: any = {
-  dispatchAddCustomData: addCustomData,
+const mapDispatchToProps = {
+  dispatchSetCustomData: setCustomData,
 };
 
 const connector = connect(null, mapDispatchToProps);
@@ -12,23 +12,24 @@ const connector = connect(null, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 export type Props = PropsFromRedux & {
+  key?: string;
   layerId: number;
   elementId: string;
   keyName: string;
   value: string;
 };
 
-class PropertyInput extends React.Component<Props, any> {
-  state = {
-    updatedValue: this.props.value,
-  };
+type State = {};
 
-  handeOnChange = (e: any) => {
-    console.log("wesjdk");
+class PropertyInput extends React.Component<Props, State> {
+  handeOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { dispatchSetCustomData, layerId, elementId, keyName } = this.props;
+    const { value } = e.target;
+    dispatchSetCustomData({ value, layerId, id: elementId, key: keyName });
   };
 
   public render() {
-    const { keyName } = this.props;
+    const { keyName, value } = this.props;
     console.log("PropertyInput -> render -> key", keyName);
 
     return (
@@ -37,7 +38,7 @@ class PropertyInput extends React.Component<Props, any> {
         <input
           name="value"
           placeholder="Value"
-          value={this.state.updatedValue}
+          value={value}
           onChange={this.handeOnChange}
         />
       </div>
@@ -45,6 +46,6 @@ class PropertyInput extends React.Component<Props, any> {
   }
 }
 
-const ConnectedComponent: any = connector(PropertyInput);
+const ConnectedComponent = connector(PropertyInput);
 
 export default ConnectedComponent;
