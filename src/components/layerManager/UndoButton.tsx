@@ -1,6 +1,6 @@
 import React from "react";
 import { Dispatch } from "redux";
-import { ActionCreators, ActionTypes } from "redux-undo";
+import { ActionCreators } from "redux-undo";
 import { connect, ConnectedProps } from "react-redux";
 
 const undo = ActionCreators.undo();

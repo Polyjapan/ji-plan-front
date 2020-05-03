@@ -3,6 +3,7 @@ export const REMOVE_ELEMENT = "REMOVE_ELEMENT";
 export const GET_ELEMENTS = "GET_ELEMENTS";
 export const SET_SELECTED_LAYER = "SET_SELECTED_LAYER";
 export const MOVE_ELEMENT = "MOVE_ELEMENT";
+export const SET_SELECTED_ELEMENT = "SET_SELECTED_ELEMENT";
 export const ADD_CUSTOM_DATA = "ADD_CUSTOM_DATA";
 export const TRANSFORM_ELEMENT = "TRANSFORM_ELEMENT";
 export const SET_CUSTOM_DATA = "SET_CUSTOM_DATA";
@@ -23,6 +24,11 @@ interface RemoveElementAction {
 interface SelectLayerAction {
   type: typeof SET_SELECTED_LAYER;
   payload: number;
+}
+
+interface SelectElementAction {
+  type: typeof SET_SELECTED_ELEMENT;
+  payload: string | null;
 }
 
 export type MoveElementPayloadType = {
@@ -75,6 +81,7 @@ type LayerActionTypes =
   | AddElementAction
   | RemoveElementAction
   | SelectLayerAction
+  | SelectElementAction
   | MoveElementAction
   | TransformElementAction
   | AddCustomDataAction

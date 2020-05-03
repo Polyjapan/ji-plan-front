@@ -9,6 +9,7 @@ import LayerActionTypes, {
   ADD_CUSTOM_DATA,
   TRANSFORM_ELEMENT,
   SET_CUSTOM_DATA,
+  SET_SELECTED_ELEMENT,
 } from "./LayerActionTypes";
 import { generateRandomId } from "../utils/utils";
 
@@ -60,7 +61,13 @@ const initialLayers = List([
   new Layer({ name: "Déco" }),
 ]);
 
-const initialState = new LayerState({ layers: initialLayers, selected: 0 });
+const initialState = new LayerState({
+  layers: initialLayers,
+  selected: Map({
+    element: null,
+    layer: 0,
+  }),
+});
 
 export function layerReducer(
   state = initialState,
@@ -69,7 +76,7 @@ export function layerReducer(
   const { type, payload } = action;
   switch (type) {
     case ADD_ELEMENT: {
-      const selectedLayer = state.get("selected").valueOf();
+      const selectedLayer = state.getIn(["selected", "layer"]).valueOf();
       const id = generateRandomId();
       const el = new Element({
         x: 150,
@@ -88,10 +95,13 @@ export function layerReducer(
       );
     }
     case SET_SELECTED_LAYER: {
-      return state.set("selected", payload);
+      return state.setIn(["selected", "layer"], payload);
+    }
+    case SET_SELECTED_ELEMENT: {
+      return state.setIn(["selected", "element"], payload);
     }
     case MOVE_ELEMENT: {
-      const selectedLayer = state.get("selected").valueOf();
+      const selectedLayer = state.getIn(["selected", "layer"]).valueOf();
       const { id: elementId, x, y } = payload;
       const index = findElementById(state, selectedLayer, elementId);
       return state
@@ -99,7 +109,7 @@ export function layerReducer(
         .setIn(["layers", selectedLayer, "elements", index, "y"], y);
     }
     case TRANSFORM_ELEMENT: {
-      const selectedLayer = state.get("selected").valueOf();
+      const selectedLayer = state.getIn(["selected", "layer"]).valueOf();
       const { rotation, x, y, height, width, id } = payload;
       const index = findElementById(state, selectedLayer, id);
       return state
@@ -132,7 +142,7 @@ export function layerReducer(
     }
     default:
       console.log("action.type", type);
-      return initialState;
+      return state;
   }
 }
 

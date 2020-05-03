@@ -30,7 +30,6 @@ class PropertyInput extends React.Component<Props, State> {
 
   public render() {
     const { keyName, value } = this.props;
-    console.log("PropertyInput -> render -> key", keyName);
 
     return (
       <div className="addCustomData">

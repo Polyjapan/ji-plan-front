@@ -6,13 +6,18 @@ import PropertyInput from "./PropertyInput";
 type Props = {
   element: Element;
   layerId: number;
+  isSelected: boolean;
 };
 
-const LayerElement = ({ element, layerId }: Props) => {
+const LayerElement = ({ element, layerId, isSelected }: Props) => {
   const customData = element.get("customData");
 
   return (
-    <div data-id={element.get("id")} className="layerElement">
+    <div
+      data-id={element.get("id")}
+      className="layerElement"
+      style={{ background: isSelected ? "orange" : undefined }}
+    >
       <div className="category">{element.get("category")}</div>
       <div className="name">{element.get("name")}</div>
 

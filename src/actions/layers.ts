@@ -4,6 +4,7 @@ import LayerActionTypes, {
   ADD_CUSTOM_DATA,
   MOVE_ELEMENT,
   SET_CUSTOM_DATA,
+  SET_SELECTED_ELEMENT,
   MoveElementPayloadType,
   TransformElementPayloadType,
   AddCustomDataPayloadType,
@@ -34,6 +35,12 @@ export const transformElement = (
   payload: TransformElementPayloadType
 ): LayerAction => (dispatch): void => {
   dispatch({ type: TRANSFORM_ELEMENT, payload });
+};
+
+export const selectElement = (rectId: string | null): LayerAction => (
+  dispatch
+): void => {
+  dispatch({ type: SET_SELECTED_ELEMENT, payload: rectId });
 };
 
 export const addCustomData = (

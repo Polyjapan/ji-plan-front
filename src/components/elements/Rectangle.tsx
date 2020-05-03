@@ -1,6 +1,12 @@
 import React from "react";
+import Konva from "konva";
 import { Rect, Transformer } from "react-konva";
 import Element from "../../classes/Element";
+import {
+  HIGHLIGHT_BORDER_COLOR,
+  HIGHLIGHT_STROKE_SIZE,
+  HIGHLIGHT_ELEMENT_BORDER_COLOR,
+} from "../../constants/styles";
 
 export type Props = {
   key?: number;
@@ -32,13 +38,46 @@ const Rectangle = ({
     }
   }, [isSelected, isLayerSelected]);
 
+  React.useEffect(() => {
+    // applyCache
+    shapeRef.current.cache();
+    shapeRef.current.getLayer().batchDraw();
+  });
+
+  const filters = [];
+  if (!isLayerSelected) {
+    filters.push(Konva.Filters.Grayscale);
+  }
+
+  const stylesProps = {
+    stroke: (() => {
+      if (isSelected) {
+        return HIGHLIGHT_ELEMENT_BORDER_COLOR;
+      }
+      if (isLayerSelected) {
+        return HIGHLIGHT_BORDER_COLOR;
+      }
+
+      return undefined;
+    })(),
+    strokeWidth: isSelected || isLayerSelected ? HIGHLIGHT_STROKE_SIZE : 0,
+    filters,
+  };
+
   return (
     <React.Fragment>
       <Rect
+        onMouseEnter={() => {
+          document.body.style.cursor = "pointer";
+        }}
+        onMouseLeave={() => {
+          document.body.style.cursor = "default";
+        }}
         onClick={onSelect}
         onTap={onSelect}
         ref={shapeRef}
         {...shapeProps.toJS()}
+        {...stylesProps}
         draggable={isLayerSelected}
         onDragEnd={(e) => {
           onMove({

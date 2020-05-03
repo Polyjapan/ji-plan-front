@@ -1,6 +1,6 @@
 import React from "react";
-import { List, Map } from "immutable";
-import { Stage, Layer, KonvaNodeEvents } from "react-konva";
+import { List } from "immutable";
+import { Stage, Layer } from "react-konva";
 import { connect, ConnectedProps } from "react-redux";
 import Background from "./Background";
 import AddButton from "./AddButton";
@@ -10,7 +10,11 @@ import { PRESENT } from "../config/constants";
 import Element from "../classes/Element";
 import LayerClass from "../classes/Layer";
 import LayerManager from "./layerManager/LayerManager";
-import { moveElement, transformElement } from "../actions/layers";
+import {
+  moveElement,
+  transformElement,
+  selectElement,
+} from "../actions/layers";
 import {
   MoveElementPayloadType,
   TransformElementPayloadType,
@@ -18,14 +22,15 @@ import {
 import { RootState } from "../reducers";
 
 const mapDispatchToProps = {
-  // dispatchGetElements: getElements,
   dispatchMoveElement: moveElement,
   dispatchTransformElement: transformElement,
+  dispatchSelectElement: selectElement,
 };
 
 const mapStateToProps = ({ layers }: RootState) => ({
   layers: layers[PRESENT].get("layers"), //.toJS(),
-  selectedLayer: layers[PRESENT].get("selected"),
+  selectedLayer: layers[PRESENT].getIn(["selected", "layer"]),
+  selectedElementId: layers[PRESENT].getIn(["selected", "element"]),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -33,28 +38,19 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type Props = PropsFromRedux & {};
 
-type State = {
-  selectedId: string | null;
-};
+type State = {};
 
 class Canvas extends React.Component<Props, State> {
   private scaleBy = 1.01;
-
-  state = {
-    selectedId: null,
-  };
-
-  public componentDidMount() {
-    // const { dispatchGetElements } = this.props;
-    // dispatchGetElements();
-  }
 
   public render() {
     const {
       layers,
       dispatchMoveElement,
       dispatchTransformElement,
+      dispatchSelectElement,
       selectedLayer,
+      selectedElementId,
     } = this.props;
 
     if (!layers || layers.size === 0) {
@@ -65,7 +61,7 @@ class Canvas extends React.Component<Props, State> {
       // deselect when clicked on empty area
       const clickedOnEmpty = e.target === e.target.getStage();
       if (clickedOnEmpty) {
-        this.setState({ selectedId: null });
+        dispatchSelectElement(null);
       }
     };
 
@@ -96,8 +92,6 @@ class Canvas extends React.Component<Props, State> {
       stage.batchDraw();
     };
 
-    const { selectedId } = this.state;
-
     return (
       <>
         <UndoButton />
@@ -126,10 +120,10 @@ class Canvas extends React.Component<Props, State> {
                     <Rectangle
                       key={k}
                       shapeProps={rect}
-                      isSelected={rectId === selectedId}
+                      isSelected={rectId === selectedElementId}
                       isLayerSelected={i === selectedLayer}
                       onSelect={() => {
-                        this.setState({ selectedId: rectId });
+                        dispatchSelectElement(rectId);
                       }}
                       onMove={(payload: MoveElementPayloadType) => {
                         dispatchMoveElement(payload);
