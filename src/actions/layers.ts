@@ -1,10 +1,12 @@
 import LayerActionTypes, {
+  ADD_ELEMENT,
   SET_SELECTED_LAYER,
   TRANSFORM_ELEMENT,
   MOVE_ELEMENT,
   SET_SELECTED_ELEMENT,
   MoveElementPayloadType,
   TransformElementPayloadType,
+  AddElementPayloadType,
 } from "../types/LayerActionTypes";
 import { ThunkAction } from "redux-thunk";
 import { RootState } from "../reducers";
@@ -14,6 +16,12 @@ import { RootState } from "../reducers";
 // };
 
 type LayerAction = ThunkAction<void, RootState, null, LayerActionTypes>;
+
+export const addElement = (payload: AddElementPayloadType): LayerAction => (
+  dispatch
+): void => {
+  dispatch({ type: ADD_ELEMENT, payload });
+};
 
 export const setSelectedLayer = (idx: number): LayerAction => (
   dispatch

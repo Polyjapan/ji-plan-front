@@ -1,3 +1,5 @@
+import { SHAPES } from "../config/constants";
+
 export const ADD_ELEMENT = "ADD_ELEMENT";
 export const REMOVE_ELEMENT = "REMOVE_ELEMENT";
 export const GET_ELEMENTS = "GET_ELEMENTS";
@@ -6,9 +8,13 @@ export const MOVE_ELEMENT = "MOVE_ELEMENT";
 export const SET_SELECTED_ELEMENT = "SET_SELECTED_ELEMENT";
 export const TRANSFORM_ELEMENT = "TRANSFORM_ELEMENT";
 
+export type AddElementPayloadType = {
+  shape: string;
+};
+
 interface AddElementAction {
   type: typeof ADD_ELEMENT;
-  payload: string;
+  payload: AddElementPayloadType;
 }
 
 interface RemoveElementAction {

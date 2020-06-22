@@ -15,6 +15,7 @@ import ElementActionTypes, {
   SET_VISIBILITY,
 } from "../types/ElementActionTypes";
 import { generateRandomId } from "../utils/utils";
+import { SHAPES } from "../config/constants";
 
 const findElementById = (
   state: LayerState,
@@ -44,6 +45,7 @@ const initialElements = List([
       key: "value",
       prop: "ddd",
     }),
+    shape: SHAPES.RECTANGLE,
   }),
   new Element({
     x: 250,
@@ -56,6 +58,7 @@ const initialElements = List([
     name: "rect2",
     customData: Map(),
     rotation: 10,
+    shape: SHAPES.RECTANGLE,
   }),
 ]);
 
@@ -80,6 +83,7 @@ export function layerReducer(
   switch (type) {
     case ADD_ELEMENT: {
       const selectedLayer = state.getIn(["selected", "layer"]).valueOf();
+      const { shape } = payload;
       const id = generateRandomId();
       const el = new Element({
         x: 150,
@@ -90,6 +94,7 @@ export function layerReducer(
         id,
         name: id,
         customData: Map(),
+        shape,
       });
 
       return state.updateIn(

@@ -1,4 +1,5 @@
 import { Record, Map } from "immutable";
+import { SHAPES } from "../config/constants";
 
 interface IElement {
   x: number;
@@ -8,6 +9,7 @@ interface IElement {
   fill: string;
   id: string;
   category: string;
+  shape: string;
   name: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   customData?: Map<string, any>;
@@ -22,7 +24,8 @@ const ElementRecord = Record({
   height: 100,
   fill: "red",
   id: "defaultid",
-  category: "rect",
+  category: "shape",
+  shape: SHAPES.RECTANGLE,
   name: "defaultname",
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   customData: Map<string, any>(),

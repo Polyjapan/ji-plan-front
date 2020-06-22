@@ -1,15 +1,10 @@
 import React, { ReactNode } from "react";
-import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
-import LayerActionTypes, { ADD_ELEMENT } from "../types/LayerActionTypes";
-
-// ACTIONS
-const addRect = () => (dispatch: Dispatch<LayerActionTypes>): void => {
-  dispatch({ type: ADD_ELEMENT, payload: "hey" });
-};
+import { addElement } from "../actions/layers";
+import { SHAPES } from "../config/constants";
 
 const mapDispatchToProps = {
-  dispatchAddRect: addRect,
+  dispatchAddElement: addElement,
 };
 
 const connector = connect(null, mapDispatchToProps);
@@ -20,8 +15,8 @@ type State = {
 };
 class AddButton extends React.Component<Props, State> {
   private addRect = (): void => {
-    const { dispatchAddRect } = this.props;
-    dispatchAddRect();
+    const { dispatchAddElement } = this.props;
+    dispatchAddElement({ shape: SHAPES.RECTANGLE });
   };
 
   public render = (): ReactNode => {

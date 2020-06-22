@@ -3,13 +3,11 @@ import { List } from "immutable";
 import { Stage, Layer } from "react-konva";
 import { connect, ConnectedProps } from "react-redux";
 import Background from "./Background";
-import AddButton from "./AddButton";
-import UndoButton from "./layerManager/UndoButton";
 import Rectangle from "./elements/Rectangle";
-import { PRESENT } from "../config/constants";
+import Circle, { CircleProps } from "./elements/Circle";
+import { PRESENT, SHAPES } from "../config/constants";
 import Element from "../classes/Element";
 import LayerClass from "../classes/Layer";
-import LayerManager from "./layerManager/LayerManager";
 import {
   moveElement,
   transformElement,
@@ -94,11 +92,6 @@ class Canvas extends React.Component<Props, State> {
 
     return (
       <>
-        <UndoButton />
-        <AddButton />
-
-        <LayerManager />
-
         <Stage
           width={window.innerWidth}
           height={window.innerHeight}
@@ -114,30 +107,59 @@ class Canvas extends React.Component<Props, State> {
             const elements: List<Element> = layer.get("elements");
             return (
               <Layer key={i} name={layer.get("name")}>
-                {elements.map((rect: Element, k: number) => {
-                  const rectId = rect.get("id");
+                {elements.map((element: Element, k: number) => {
+                  const elementId = element.get("id");
 
-                  if (!rect.get("isVisible")) {
+                  if (!element.get("isVisible")) {
                     return null;
                   }
 
-                  return (
-                    <Rectangle
-                      key={k}
-                      shapeProps={rect}
-                      isSelected={rectId === selectedElementId}
-                      isLayerSelected={i === selectedLayer}
-                      onSelect={() => {
-                        dispatchSelectElement(rectId);
-                      }}
-                      onMove={(payload: MoveElementPayloadType) => {
-                        dispatchMoveElement(payload);
-                      }}
-                      onTransform={(payload: TransformElementPayloadType) => {
-                        dispatchTransformElement(payload);
-                      }}
-                    />
-                  );
+                  switch (element.get("shape") as any) {
+                    case SHAPES.RECTANGLE:
+                      return (
+                        <Rectangle
+                          key={k}
+                          shapeProps={element}
+                          isSelected={elementId === selectedElementId}
+                          isLayerSelected={i === selectedLayer}
+                          onSelect={() => {
+                            dispatchSelectElement(elementId);
+                          }}
+                          onMove={(payload: MoveElementPayloadType) => {
+                            dispatchMoveElement(payload);
+                          }}
+                          onTransform={(
+                            payload: TransformElementPayloadType
+                          ) => {
+                            dispatchTransformElement(payload);
+                          }}
+                        />
+                      );
+
+                    case SHAPES.CIRCLE:
+                      return (
+                        <Circle
+                          key={k}
+                          shapeProps={element as CircleProps}
+                          isSelected={elementId === selectedElementId}
+                          isLayerSelected={i === selectedLayer}
+                          onSelect={() => {
+                            dispatchSelectElement(elementId);
+                          }}
+                          onMove={(payload: MoveElementPayloadType) => {
+                            dispatchMoveElement(payload);
+                          }}
+                          onTransform={(
+                            payload: TransformElementPayloadType
+                          ) => {
+                            dispatchTransformElement(payload);
+                          }}
+                        />
+                      );
+                    default:
+                      console.log("wef");
+                      return null;
+                  }
                 })}
               </Layer>
             );
