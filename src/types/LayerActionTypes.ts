@@ -4,10 +4,7 @@ export const GET_ELEMENTS = "GET_ELEMENTS";
 export const SET_SELECTED_LAYER = "SET_SELECTED_LAYER";
 export const MOVE_ELEMENT = "MOVE_ELEMENT";
 export const SET_SELECTED_ELEMENT = "SET_SELECTED_ELEMENT";
-export const ADD_CUSTOM_DATA = "ADD_CUSTOM_DATA";
 export const TRANSFORM_ELEMENT = "TRANSFORM_ELEMENT";
-export const SET_CUSTOM_DATA = "SET_CUSTOM_DATA";
-export const SET_VISIBILITY = "SET_VISIBILITY";
 
 interface AddElementAction {
   type: typeof ADD_ELEMENT;
@@ -62,31 +59,6 @@ export type AddCustomDataPayloadType = {
   id: string;
   layerId: number;
 };
-interface AddCustomDataAction {
-  type: typeof ADD_CUSTOM_DATA;
-  payload: AddCustomDataPayloadType;
-}
-
-export type SetCustomDataPayloadType = {
-  key: string;
-  value: string;
-  id: string;
-  layerId: number;
-};
-interface SetCustomDataAction {
-  type: typeof SET_CUSTOM_DATA;
-  payload: SetCustomDataPayloadType;
-}
-
-export type SetVisibilityPayloadType = {
-  visibility: boolean;
-  id: string;
-  layerId: number;
-};
-interface SetVisibilityAction {
-  type: typeof SET_VISIBILITY;
-  payload: SetVisibilityPayloadType;
-}
 
 type LayerActionTypes =
   | AddElementAction
@@ -94,9 +66,6 @@ type LayerActionTypes =
   | SelectLayerAction
   | SelectElementAction
   | MoveElementAction
-  | TransformElementAction
-  | AddCustomDataAction
-  | SetCustomDataAction
-  | SetVisibilityAction;
+  | TransformElementAction;
 
 export default LayerActionTypes;

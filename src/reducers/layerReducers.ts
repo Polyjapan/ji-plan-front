@@ -6,12 +6,14 @@ import LayerActionTypes, {
   ADD_ELEMENT,
   SET_SELECTED_LAYER,
   MOVE_ELEMENT,
-  ADD_CUSTOM_DATA,
   TRANSFORM_ELEMENT,
-  SET_CUSTOM_DATA,
   SET_SELECTED_ELEMENT,
+} from "../types/LayerActionTypes";
+import ElementActionTypes, {
+  ADD_CUSTOM_DATA,
+  SET_CUSTOM_DATA,
   SET_VISIBILITY,
-} from "./LayerActionTypes";
+} from "../types/ElementActionTypes";
 import { generateRandomId } from "../utils/utils";
 
 const findElementById = (
@@ -72,7 +74,7 @@ const initialState = new LayerState({
 
 export function layerReducer(
   state = initialState,
-  action: LayerActionTypes
+  action: LayerActionTypes | ElementActionTypes
 ): LayerState {
   const { type, payload } = action;
   switch (type) {

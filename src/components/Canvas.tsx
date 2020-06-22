@@ -18,7 +18,7 @@ import {
 import {
   MoveElementPayloadType,
   TransformElementPayloadType,
-} from "../reducers/LayerActionTypes";
+} from "../types/LayerActionTypes";
 import { RootState } from "../reducers";
 
 const mapDispatchToProps = {

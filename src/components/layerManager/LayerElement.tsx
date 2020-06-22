@@ -4,11 +4,13 @@ import Element from "../../classes/Element";
 import CustomDataForm from "./CustomDataForm";
 import PropertyInput from "./PropertyInput";
 import visibilityIcon from "../../images/visibilityIcon.png";
-import { setVisibility } from "../../actions/layers";
+import { setVisibility } from "../../actions/element";
 import { RootState } from "../../reducers";
+import { selectElement } from "../../actions/layers";
 
 const mapDispatchToProps = {
   dispatchSetVisibility: setVisibility,
+  dispatchSelectElement: selectElement,
 };
 
 const mapStateToProps = ({ layers }: RootState) => ({});
@@ -35,15 +37,22 @@ class LayerElement extends React.Component<Props, State> {
     });
   };
 
+  selectElement = () => {
+    const { dispatchSelectElement, element } = this.props;
+    const id = element.get("id");
+    dispatchSelectElement(id);
+  };
+
   render() {
     const { element, layerId, isSelected } = this.props;
     const customData = element.get("customData");
-
+    const id = element.get("id");
     return (
       <div
-        data-id={element.get("id")}
+        data-id={id}
         className="layerElement"
         style={{ background: isSelected ? "orange" : undefined }}
+        onClick={this.selectElement}
       >
         <div
           className="visible"

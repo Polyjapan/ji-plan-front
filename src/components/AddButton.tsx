@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
 import { Dispatch } from "redux";
 import { connect, ConnectedProps } from "react-redux";
-import LayerActionTypes, { ADD_ELEMENT } from "../reducers/LayerActionTypes";
+import LayerActionTypes, { ADD_ELEMENT } from "../types/LayerActionTypes";
 
 // ACTIONS
 const addRect = () => (dispatch: Dispatch<LayerActionTypes>): void => {

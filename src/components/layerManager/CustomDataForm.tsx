@@ -1,7 +1,7 @@
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import "./LayerManager.css";
-import { addCustomData } from "../../actions/layers";
+import { addCustomData } from "../../actions/element";
 
 const mapDispatchToProps = {
   dispatchAddCustomData: addCustomData,
