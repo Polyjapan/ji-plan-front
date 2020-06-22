@@ -10,6 +10,7 @@ import LayerActionTypes, {
   TRANSFORM_ELEMENT,
   SET_CUSTOM_DATA,
   SET_SELECTED_ELEMENT,
+  SET_VISIBILITY,
 } from "./LayerActionTypes";
 import { generateRandomId } from "../utils/utils";
 
@@ -138,6 +139,14 @@ export function layerReducer(
       return state.setIn(
         ["layers", layerId, "elements", index, "customData", key],
         value
+      );
+    }
+    case SET_VISIBILITY: {
+      const { visibility, id: elementId, layerId } = payload;
+      const index = findElementById(state, layerId, elementId);
+      return state.setIn(
+        ["layers", layerId, "elements", index, "isVisible"],
+        visibility
       );
     }
     default:

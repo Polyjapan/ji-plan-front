@@ -1,12 +1,11 @@
 import React, { ReactElement } from "react";
 import useImage from "use-image";
+import EPFL_CE_0 from "../images/Plan_CE_0_blank.svg";
 import { Image } from "react-konva";
 
 // the first very simple and recommended way:
 const Background = (): ReactElement<any> | null => {
-  const [image] = useImage(
-    "https://www.epfl.ch/schools/cdm/wp-content/uploads/2018/10/Campus-map-EPFL-2018.jpg"
-  );
+  const [image] = useImage(EPFL_CE_0);
   return (
     <Image
       onMouseEnter={() => {
@@ -16,8 +15,8 @@ const Background = (): ReactElement<any> | null => {
         document.body.style.cursor = "default";
       }}
       image={image}
-      scaleX={0.7}
-      scaleY={0.7}
+      scaleX={1}
+      scaleY={1}
     />
   );
 };

@@ -5,10 +5,12 @@ import LayerActionTypes, {
   MOVE_ELEMENT,
   SET_CUSTOM_DATA,
   SET_SELECTED_ELEMENT,
+  SET_VISIBILITY,
   MoveElementPayloadType,
   TransformElementPayloadType,
   AddCustomDataPayloadType,
   SetCustomDataPayloadType,
+  SetVisibilityPayloadType,
 } from "../reducers/LayerActionTypes";
 import { ThunkAction } from "redux-thunk";
 import { RootState } from "../reducers";
@@ -53,4 +55,10 @@ export const setCustomData = (
   payload: SetCustomDataPayloadType
 ): LayerAction => (dispatch): void => {
   dispatch({ type: SET_CUSTOM_DATA, payload });
+};
+
+export const setVisibility = (
+  payload: SetVisibilityPayloadType
+): LayerAction => (dispatch): void => {
+  dispatch({ type: SET_VISIBILITY, payload });
 };

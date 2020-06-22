@@ -7,6 +7,7 @@ export const SET_SELECTED_ELEMENT = "SET_SELECTED_ELEMENT";
 export const ADD_CUSTOM_DATA = "ADD_CUSTOM_DATA";
 export const TRANSFORM_ELEMENT = "TRANSFORM_ELEMENT";
 export const SET_CUSTOM_DATA = "SET_CUSTOM_DATA";
+export const SET_VISIBILITY = "SET_VISIBILITY";
 
 interface AddElementAction {
   type: typeof ADD_ELEMENT;
@@ -77,6 +78,16 @@ interface SetCustomDataAction {
   payload: SetCustomDataPayloadType;
 }
 
+export type SetVisibilityPayloadType = {
+  visibility: boolean;
+  id: string;
+  layerId: number;
+};
+interface SetVisibilityAction {
+  type: typeof SET_VISIBILITY;
+  payload: SetVisibilityPayloadType;
+}
+
 type LayerActionTypes =
   | AddElementAction
   | RemoveElementAction
@@ -85,6 +96,7 @@ type LayerActionTypes =
   | MoveElementAction
   | TransformElementAction
   | AddCustomDataAction
-  | SetCustomDataAction;
+  | SetCustomDataAction
+  | SetVisibilityAction;
 
 export default LayerActionTypes;

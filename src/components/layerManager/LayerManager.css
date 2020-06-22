@@ -23,14 +23,13 @@
 .layerElement {
   border-top: 1px solid black;
   text-align: left;
+  margin-top: 10px;
 }
 
-.category {
+.visible {
   padding: 5px;
-  border: 1px solid black;
   margin-right: 5px;
   display: inline-block;
-  width: 20%;
 }
 
 .name {

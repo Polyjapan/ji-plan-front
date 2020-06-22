@@ -12,6 +12,7 @@ interface IElement {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   customData?: Map<string, any>;
   rotation?: number;
+  isVisible: boolean;
 }
 
 const ElementRecord = Record({
@@ -26,6 +27,7 @@ const ElementRecord = Record({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   customData: Map<string, any>(),
   rotation: 0,
+  isVisible: true,
 });
 
 class Element extends ElementRecord implements IElement {}

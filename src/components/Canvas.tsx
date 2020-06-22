@@ -116,6 +116,11 @@ class Canvas extends React.Component<Props, State> {
               <Layer key={i} name={layer.get("name")}>
                 {elements.map((rect: Element, k: number) => {
                   const rectId = rect.get("id");
+
+                  if (!rect.get("isVisible")) {
+                    return null;
+                  }
+
                   return (
                     <Rectangle
                       key={k}
