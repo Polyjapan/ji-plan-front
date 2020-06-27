@@ -1,5 +1,6 @@
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
+import Form from "react-bootstrap/Form";
 import Element from "../../classes/Element";
 import CustomDataForm from "./CustomDataForm";
 import PropertyInput from "./PropertyInput";
@@ -67,16 +68,18 @@ class LayerElement extends React.Component<Props, State> {
         </div>
         <div className="name">{element.get("name")}</div>
 
-        {!customData.isEmpty() &&
-          Object.entries(customData.toJS()).map(([key, value]) => (
-            <PropertyInput
-              layerId={layerId}
-              elementId={element.get("id")}
-              key={key}
-              keyName={key}
-              value={value as string}
-            />
-          ))}
+        <Form>
+          {!customData.isEmpty() &&
+            Object.entries(customData.toJS()).map(([key, value]) => (
+              <PropertyInput
+                layerId={layerId}
+                elementId={element.get("id")}
+                key={key}
+                keyName={key}
+                value={value as string}
+              />
+            ))}
+        </Form>
         <CustomDataForm elementId={element.get("id")} layerId={layerId} />
       </div>
     );

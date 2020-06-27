@@ -1,5 +1,8 @@
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
+import Form from "react-bootstrap/Form";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 import "./LayerManager.css";
 import { setCustomData } from "../../actions/element";
 
@@ -32,15 +35,23 @@ class PropertyInput extends React.Component<Props, State> {
     const { keyName, value } = this.props;
 
     return (
-      <div className="addCustomData">
-        {keyName}
-        <input
-          name="value"
-          placeholder="Value"
-          value={value}
-          onChange={this.handeOnChange}
-        />
-      </div>
+      <Form.Group
+        as={Row}
+        controlId="formPlaintextPassword"
+        className="customData mb-1"
+      >
+        <Form.Label column sm="4" title={keyName}>
+          {keyName}
+        </Form.Label>
+        <Col sm="8">
+          <Form.Control
+            type="text"
+            placeholder={keyName}
+            value={value}
+            onChange={this.handeOnChange}
+          />
+        </Col>
+      </Form.Group>
     );
   }
 }

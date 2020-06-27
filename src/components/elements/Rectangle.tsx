@@ -68,7 +68,9 @@ const Rectangle = ({
     <React.Fragment>
       <Rect
         onMouseEnter={() => {
-          document.body.style.cursor = "pointer";
+          if (isLayerSelected) {
+            document.body.style.cursor = "pointer";
+          }
         }}
         onMouseLeave={() => {
           document.body.style.cursor = "default";

@@ -3,8 +3,8 @@ import { SHAPES } from "../config/constants";
 
 const ElementRecord = (props: any) =>
   class extends Record({
-    x: 0,
-    y: 0,
+    x: undefined,
+    y: undefined,
     width: 100,
     height: 100,
     fill: "red",

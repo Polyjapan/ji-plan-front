@@ -9,9 +9,11 @@ const mapDispatchToProps = {
   dispatchAddElement: addElement,
 };
 
-const mapStateToProps = ({ layers }: RootState) => ({
+const mapStateToProps = ({ layers, canvas }: RootState) => ({
   layers: layers[PRESENT].get("layers"), //.toJS(),
   selected: layers[PRESENT].getIn(["selected", "layer"]),
+  stageOffset: canvas.getIn(["stage", "offset"]),
+  scale: canvas.getIn(["stage", "scale"]),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -23,8 +25,13 @@ class Toolbar extends React.Component<Props> {
   addElement = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const target = e.target as HTMLButtonElement;
     const shape = target.dataset.shape as string;
-    const { dispatchAddElement } = this.props;
-    dispatchAddElement({ shape });
+    const { dispatchAddElement, stageOffset, scale } = this.props;
+
+    const { x: left, y: top } = stageOffset;
+    const x = (window.innerWidth / 2 - left) / scale;
+    const y = (window.innerHeight / 2 - top) / scale;
+
+    dispatchAddElement({ shape, x, y });
   };
 
   public render() {

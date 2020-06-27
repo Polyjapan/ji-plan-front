@@ -1,4 +1,7 @@
 import React from "react";
+import Form from "react-bootstrap/Form";
+import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
 import { connect, ConnectedProps } from "react-redux";
 import "./LayerManager.css";
 import { addCustomData } from "../../actions/element";
@@ -52,21 +55,33 @@ class CustomDataForm extends React.Component<Props, State> {
 
   public render() {
     return (
-      <div className="addCustomData">
-        <input
-          name="key"
-          placeholder="Key"
-          ref={(input) => (this._keyInput = input)}
-        />
-        <input
-          name="value"
-          placeholder="Value"
-          ref={(input) => (this._valueInput = input)}
-        />
-        <button type="submit" onClick={this.handeOnClick}>
-          Add
-        </button>
-      </div>
+      <Form className="mt-3 mb-3">
+        <Form.Row>
+          <Col>
+            <Form.Control
+              placeholder="Key"
+              name="key"
+              ref={(input: HTMLInputElement) => {
+                this._keyInput = input;
+              }}
+            />
+          </Col>
+          <Col>
+            <Form.Control
+              placeholder="Value"
+              name="value"
+              ref={(input: HTMLInputElement) => {
+                this._valueInput = input;
+              }}
+            />
+          </Col>
+          <Col>
+            <Button variant="primary" onClick={this.handeOnClick}>
+              Add
+            </Button>
+          </Col>
+        </Form.Row>
+      </Form>
     );
   }
 }

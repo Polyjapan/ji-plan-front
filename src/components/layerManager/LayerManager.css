@@ -1,5 +1,6 @@
 #layerManager {
   background: lightgrey;
+  height: 100%;
   position: absolute;
   top: 50px;
   right: 0;
@@ -11,6 +12,9 @@
 .layerManagerElement {
   background: white;
   border: 1px solid black;
+  max-height: 50%;
+  overflow-y: scroll;
+  overflow-x: hidden;
 }
 .layerManagerElement:hover {
   cursor: pointer;
@@ -24,6 +28,7 @@
   border-top: 1px solid black;
   text-align: left;
   margin-top: 10px;
+  padding: 0 10px;
 }
 
 .visible {
@@ -36,6 +41,12 @@
   font-weight: bold;
   display: inline-block;
   width: 50%;
+}
+
+.customData label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .addCustomData input {

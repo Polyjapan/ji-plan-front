@@ -19,17 +19,21 @@ import {
   TransformElementPayloadType,
 } from "../types/LayerActionTypes";
 import { RootState } from "../reducers";
+import { setStageOffset, setStageScale } from "../actions/canvas";
 
 const mapDispatchToProps = {
   dispatchMoveElement: moveElement,
   dispatchTransformElement: transformElement,
   dispatchSelectElement: selectElement,
+  dispatchSetStageOffset: setStageOffset,
+  dispatchSetStageScale: setStageScale,
 };
 
-const mapStateToProps = ({ layers }: RootState) => ({
+const mapStateToProps = ({ layers, canvas }: RootState) => ({
   layers: layers[PRESENT].get("layers"), //.toJS(),
   selectedLayer: layers[PRESENT].getIn(["selected", "layer"]),
   selectedElementId: layers[PRESENT].getIn(["selected", "element"]),
+  stageScale: canvas.getIn(["stage", "scale"]),
 });
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
@@ -37,10 +41,69 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 type Props = PropsFromRedux & {};
 
-type State = {};
+type State = {
+  scale: number;
+  onWheelIteration: number;
+};
 
 class Canvas extends React.Component<Props, State> {
-  private scaleBy = 1.01;
+  state: State = {
+    scale: this.props.stageScale,
+    onWheelIteration: 0,
+  };
+
+  public shouldComponentUpdate({}: Props, { scale }: State) {
+    const { scale: prevScale } = this.state;
+    if (scale != prevScale) {
+      return false;
+    }
+    return true;
+  }
+
+  checkDeselect = (e: any) => {
+    const { dispatchSelectElement } = this.props;
+    // deselect when clicked on empty area
+    const clickedOnEmpty = e.target === e.target.getStage();
+    if (clickedOnEmpty) {
+      dispatchSelectElement(null);
+    }
+  };
+
+  onWheelHandler = (e: any) => {
+    const { dispatchSetStageScale } = this.props;
+    const { scale, onWheelIteration } = this.state;
+    const target = e.target;
+    const stage = target.getStage();
+    e.evt.preventDefault();
+    const oldScale = stage.scaleX();
+
+    const mousePointTo = {
+      x: stage.getPointerPosition().x / oldScale - stage.x() / oldScale,
+      y: stage.getPointerPosition().y / oldScale - stage.y() / oldScale,
+    };
+
+    const newScale = e.evt.deltaY > 0 ? oldScale * scale : oldScale / scale;
+    stage.scale({ x: newScale, y: newScale });
+
+    const newPos = {
+      x: -(mousePointTo.x - stage.getPointerPosition().x / newScale) * newScale,
+      y: -(mousePointTo.y - stage.getPointerPosition().y / newScale) * newScale,
+    };
+    stage.position(newPos);
+    stage.batchDraw();
+
+    // avoid dispatching each time
+    this.setState({ onWheelIteration: onWheelIteration + 1 });
+    if (onWheelIteration % 10 == 0) {
+      dispatchSetStageScale({ scale: newScale });
+    }
+  };
+
+  onDragEnd = (evt: any) => {
+    const { dispatchSetStageOffset } = this.props;
+    const { x, y } = evt.target.attrs;
+    dispatchSetStageOffset({ x, y });
+  };
 
   public render() {
     const {
@@ -56,49 +119,18 @@ class Canvas extends React.Component<Props, State> {
       return null;
     }
 
-    const checkDeselect = (e: any) => {
-      // deselect when clicked on empty area
-      const clickedOnEmpty = e.target === e.target.getStage();
-      if (clickedOnEmpty) {
-        dispatchSelectElement(null);
-      }
-    };
-
-    const onWheelHandler = (e: any) => {
-      const target = e.target;
-      const stage = target.getStage();
-      e.evt.preventDefault();
-      const oldScale = stage.scaleX();
-
-      const mousePointTo = {
-        x: stage.getPointerPosition().x / oldScale - stage.x() / oldScale,
-        y: stage.getPointerPosition().y / oldScale - stage.y() / oldScale,
-      };
-
-      const newScale =
-        e.evt.deltaY > 0 ? oldScale * this.scaleBy : oldScale / this.scaleBy;
-      stage.scale({ x: newScale, y: newScale });
-
-      const newPos = {
-        x:
-          -(mousePointTo.x - stage.getPointerPosition().x / newScale) *
-          newScale,
-        y:
-          -(mousePointTo.y - stage.getPointerPosition().y / newScale) *
-          newScale,
-      };
-      stage.position(newPos);
-      stage.batchDraw();
-    };
-
     return (
       <>
         <Stage
           width={window.innerWidth}
           height={window.innerHeight}
-          onMouseDown={checkDeselect}
-          onTouchStart={checkDeselect}
-          onWheel={onWheelHandler}
+          onMouseDown={this.checkDeselect}
+          onTouchStart={this.checkDeselect}
+          onDragEnd={this.onDragEnd}
+          onWheel={this.onWheelHandler}
+          onTransformEnd={() => {
+            console.log("weifjk");
+          }}
           draggable
         >
           <Layer>
@@ -106,6 +138,7 @@ class Canvas extends React.Component<Props, State> {
           </Layer>
           {layers.map((layer: LayerClass, i: number) => {
             const elements: List<Element> = layer.get("elements");
+            const isLayerSelected = i === selectedLayer;
             return (
               <Layer key={i} name={layer.get("name")}>
                 {elements.map((element: Element, k: number) => {
@@ -115,14 +148,16 @@ class Canvas extends React.Component<Props, State> {
                     return null;
                   }
 
+                  const isSelected = elementId === selectedElementId;
+
                   switch (element.get("shape") as any) {
                     case SHAPES.RECTANGLE:
                       return (
                         <Rectangle
                           key={k}
                           shapeProps={element}
-                          isSelected={elementId === selectedElementId}
-                          isLayerSelected={i === selectedLayer}
+                          isSelected={isSelected}
+                          isLayerSelected={isLayerSelected}
                           onSelect={() => {
                             dispatchSelectElement(elementId);
                           }}
@@ -142,8 +177,8 @@ class Canvas extends React.Component<Props, State> {
                         <Circle
                           key={k}
                           shapeProps={element as CircleProps}
-                          isSelected={elementId === selectedElementId}
-                          isLayerSelected={i === selectedLayer}
+                          isSelected={isSelected}
+                          isLayerSelected={isLayerSelected}
                           onSelect={() => {
                             dispatchSelectElement(elementId);
                           }}
@@ -163,8 +198,8 @@ class Canvas extends React.Component<Props, State> {
                         <Text
                           key={k}
                           shapeProps={element as TextProps}
-                          isSelected={elementId === selectedElementId}
-                          isLayerSelected={i === selectedLayer}
+                          isSelected={isSelected}
+                          isLayerSelected={isLayerSelected}
                           onSelect={() => {
                             dispatchSelectElement(elementId);
                           }}

@@ -19,21 +19,27 @@ import { generateRandomId } from "../utils/utils";
 
 type LayerAction = ThunkAction<void, RootState, null, LayerActionTypes>;
 
-export const addElement = ({ shape }: { shape: string }): LayerAction => (
-  dispatch
-): void => {
+export const addElement = ({
+  shape,
+  x,
+  y,
+}: {
+  shape: string;
+  x: number;
+  y: number;
+}): LayerAction => (dispatch): void => {
   const id = generateRandomId();
 
   let element;
   switch (shape) {
     case SHAPES.RECTANGLE:
-      element = new RectangleProps({ id });
+      element = new RectangleProps({ id, x, y });
       break;
     case SHAPES.CIRCLE:
-      element = new CircleProps({ id, fill: "blue" });
+      element = new CircleProps({ id, x, y, fill: "blue" });
       break;
     case SHAPES.TEXT:
-      element = new TextProps({ id });
+      element = new TextProps({ id, x, y });
       break;
     default:
       break;
