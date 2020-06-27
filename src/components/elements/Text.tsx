@@ -1,17 +1,21 @@
 import React from "react";
 import Konva from "konva";
-import { Circle, Transformer } from "react-konva";
-import { CircleProps } from "../../classes/Element";
+import { Text, Transformer } from "react-konva";
+import Element from "../../classes/Element";
 import {
   HIGHLIGHT_BORDER_COLOR,
-  HIGHLIGHT_STROKE_SIZE,
   HIGHLIGHT_ELEMENT_BORDER_COLOR,
+  HIGHLIGHT_STROKE_TEXT_SIZE,
 } from "../../constants/styles";
+
+export type TextProps = Element & {
+  text: string;
+};
 
 export type Props = {
   key?: number;
   isLayerSelected: boolean;
-  shapeProps: CircleProps;
+  shapeProps: TextProps;
   isSelected: boolean;
   onSelect: any;
   onMove: any;
@@ -19,7 +23,7 @@ export type Props = {
 };
 
 // <props, state>
-const CircleEl = ({
+const TextEl = ({
   shapeProps,
   isSelected,
   onSelect,
@@ -60,14 +64,14 @@ const CircleEl = ({
 
       return undefined;
     })(),
-    strokeWidth: isSelected || isLayerSelected ? HIGHLIGHT_STROKE_SIZE : 0,
+    strokeWidth: isSelected || isLayerSelected ? HIGHLIGHT_STROKE_TEXT_SIZE : 0,
     filters,
   };
 
   return (
     <React.Fragment>
-      <Circle
-        radius={shapeProps.radius}
+      <Text
+        text={shapeProps.text || "default"}
         onMouseEnter={() => {
           document.body.style.cursor = "pointer";
         }}
@@ -126,4 +130,4 @@ const CircleEl = ({
   );
 };
 
-export default CircleEl;
+export default TextEl;

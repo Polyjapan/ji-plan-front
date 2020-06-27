@@ -13,7 +13,7 @@ const mapDispatchToProps = {
   dispatchSelectElement: selectElement,
 };
 
-const mapStateToProps = ({ layers }: RootState) => ({});
+const mapStateToProps = ({}: RootState) => ({});
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
@@ -74,7 +74,7 @@ class LayerElement extends React.Component<Props, State> {
               elementId={element.get("id")}
               key={key}
               keyName={key}
-              value={value}
+              value={value as string}
             />
           ))}
         <CustomDataForm elementId={element.get("id")} layerId={layerId} />

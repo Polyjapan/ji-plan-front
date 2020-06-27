@@ -1,5 +1,4 @@
 import React from "react";
-import { List } from "immutable";
 import { connect, ConnectedProps } from "react-redux";
 import { PRESENT, SHAPES } from "../../config/constants";
 import "./Toolbar.css";
@@ -44,6 +43,13 @@ class Toolbar extends React.Component<Props> {
           onClick={this.addElement}
         >
           ⬤
+        </div>
+        <div
+          className="shape"
+          data-shape={SHAPES.TEXT}
+          onClick={this.addElement}
+        >
+          T
         </div>
       </div>
     );

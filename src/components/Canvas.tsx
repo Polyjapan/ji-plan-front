@@ -4,9 +4,10 @@ import { Stage, Layer } from "react-konva";
 import { connect, ConnectedProps } from "react-redux";
 import Background from "./Background";
 import Rectangle from "./elements/Rectangle";
-import Circle, { CircleProps } from "./elements/Circle";
+import Circle from "./elements/Circle";
+import Text, { TextProps } from "./elements/Text";
 import { PRESENT, SHAPES } from "../config/constants";
-import Element from "../classes/Element";
+import Element, { CircleProps } from "../classes/Element";
 import LayerClass from "../classes/Layer";
 import {
   moveElement,
@@ -156,6 +157,28 @@ class Canvas extends React.Component<Props, State> {
                           }}
                         />
                       );
+
+                    case SHAPES.TEXT:
+                      return (
+                        <Text
+                          key={k}
+                          shapeProps={element as TextProps}
+                          isSelected={elementId === selectedElementId}
+                          isLayerSelected={i === selectedLayer}
+                          onSelect={() => {
+                            dispatchSelectElement(elementId);
+                          }}
+                          onMove={(payload: MoveElementPayloadType) => {
+                            dispatchMoveElement(payload);
+                          }}
+                          onTransform={(
+                            payload: TransformElementPayloadType
+                          ) => {
+                            dispatchTransformElement(payload);
+                          }}
+                        />
+                      );
+
                     default:
                       console.log("wef");
                       return null;

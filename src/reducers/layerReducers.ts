@@ -1,5 +1,5 @@
 import { List, Map } from "immutable";
-import Element from "../classes/Element";
+import Element, { RectangleProps } from "../classes/Element";
 import LayerState from "./LayerState";
 import Layer from "../classes/Layer";
 import LayerActionTypes, {
@@ -14,7 +14,6 @@ import ElementActionTypes, {
   SET_CUSTOM_DATA,
   SET_VISIBILITY,
 } from "../types/ElementActionTypes";
-import { generateRandomId } from "../utils/utils";
 import { SHAPES } from "../config/constants";
 
 const findElementById = (
@@ -32,7 +31,7 @@ const findElementById = (
 // REDUCER
 
 const initialElements = List([
-  new Element({
+  new RectangleProps({
     x: 10,
     y: 10,
     width: 100,
@@ -47,7 +46,7 @@ const initialElements = List([
     }),
     shape: SHAPES.RECTANGLE,
   }),
-  new Element({
+  new RectangleProps({
     x: 250,
     y: 150,
     width: 100,
@@ -83,23 +82,11 @@ export function layerReducer(
   switch (type) {
     case ADD_ELEMENT: {
       const selectedLayer = state.getIn(["selected", "layer"]).valueOf();
-      const { shape } = payload;
-      const id = generateRandomId();
-      const el = new Element({
-        x: 150,
-        y: 150,
-        width: 100,
-        height: 100,
-        fill: selectedLayer ? "orange" : "blue",
-        id,
-        name: id,
-        customData: Map(),
-        shape,
-      });
+      const { element } = payload;
 
       return state.updateIn(
         ["layers", selectedLayer, "elements"],
-        (elements: List<Element>) => elements.push(el)
+        (elements: List<Element>) => elements.push(element)
       );
     }
     case SET_SELECTED_LAYER: {
