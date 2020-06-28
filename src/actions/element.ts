@@ -3,6 +3,8 @@ import ElementActionTypes, {
   SET_CUSTOM_DATA,
   SET_VISIBILITY,
   SET_ELEMENT_FILL_COLOR,
+  SET_ELEMENT_TEXT,
+  SetElementTextPayloadType,
   SetElementFillColorPayloadType,
   AddCustomDataPayloadType,
   SetCustomDataPayloadType,
@@ -35,4 +37,10 @@ export const setElementFillColor = (
   payload: SetElementFillColorPayloadType
 ): ElementAction => (dispatch): void => {
   dispatch({ type: SET_ELEMENT_FILL_COLOR, payload });
+};
+
+export const setElementText = (
+  payload: SetElementTextPayloadType
+): ElementAction => (dispatch): void => {
+  dispatch({ type: SET_ELEMENT_TEXT, payload });
 };

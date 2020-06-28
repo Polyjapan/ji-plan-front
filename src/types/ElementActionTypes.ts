@@ -2,6 +2,7 @@ export const ADD_CUSTOM_DATA = "ADD_CUSTOM_DATA";
 export const SET_CUSTOM_DATA = "SET_CUSTOM_DATA";
 export const SET_VISIBILITY = "SET_VISIBILITY";
 export const SET_ELEMENT_FILL_COLOR = "SET_ELEMENT_FILL_COLOR";
+export const SET_ELEMENT_TEXT = "SET_ELEMENT_TEXT";
 
 export type AddCustomDataPayloadType = {
   key: string;
@@ -45,10 +46,21 @@ interface SetElementFillColorAction {
   payload: SetElementFillColorPayloadType;
 }
 
+export type SetElementTextPayloadType = {
+  text: string;
+  id: string;
+  layerId: number;
+};
+interface SetElementTextAction {
+  type: typeof SET_ELEMENT_TEXT;
+  payload: SetElementTextPayloadType;
+}
+
 type ElementActionTypes =
   | AddCustomDataAction
   | SetCustomDataAction
   | SetVisibilityAction
-  | SetElementFillColorAction;
+  | SetElementFillColorAction
+  | SetElementTextAction;
 
 export default ElementActionTypes;

@@ -14,6 +14,7 @@ import ElementActionTypes, {
   SET_CUSTOM_DATA,
   SET_VISIBILITY,
   SET_ELEMENT_FILL_COLOR,
+  SET_ELEMENT_TEXT,
 } from "../types/ElementActionTypes";
 import { SHAPES } from "../config/constants";
 
@@ -148,6 +149,11 @@ export function layerReducer(
       const { color, id: elementId, layerId } = payload;
       const index = findElementById(state, layerId, elementId);
       return state.setIn(["layers", layerId, "elements", index, "fill"], color);
+    }
+    case SET_ELEMENT_TEXT: {
+      const { text, id: elementId, layerId } = payload;
+      const index = findElementById(state, layerId, elementId);
+      return state.setIn(["layers", layerId, "elements", index, "text"], text);
     }
     default:
       console.log("action.type", type);

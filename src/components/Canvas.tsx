@@ -20,6 +20,8 @@ import {
 } from "../types/LayerActionTypes";
 import { RootState } from "../reducers";
 import { setStageOffset, setStageScale } from "../actions/canvas";
+import { SetElementTextPayloadType } from "../types/ElementActionTypes";
+import { setElementText } from "../actions/element";
 
 const mapDispatchToProps = {
   dispatchMoveElement: moveElement,
@@ -27,6 +29,7 @@ const mapDispatchToProps = {
   dispatchSelectElement: selectElement,
   dispatchSetStageOffset: setStageOffset,
   dispatchSetStageScale: setStageScale,
+  dispatchSetElementText: setElementText,
 };
 
 const mapStateToProps = ({ layers, canvas }: RootState) => ({
@@ -111,6 +114,7 @@ class Canvas extends React.Component<Props, State> {
       dispatchMoveElement,
       dispatchTransformElement,
       dispatchSelectElement,
+      dispatchSetElementText,
       selectedLayer,
       selectedElementId,
     } = this.props;
@@ -118,6 +122,9 @@ class Canvas extends React.Component<Props, State> {
     if (!layers || layers.size === 0) {
       return null;
     }
+
+    // Stage cannot contain be connected elements (cannot link with redux directly)
+    // so the dispatch functions should be given through props
 
     return (
       <>
@@ -197,6 +204,10 @@ class Canvas extends React.Component<Props, State> {
                       return (
                         <Text
                           key={k}
+                          onSetText={(payload: SetElementTextPayloadType) => {
+                            dispatchSetElementText(payload);
+                          }}
+                          layerId={selectedLayer}
                           shapeProps={element as TextProps}
                           isSelected={isSelected}
                           isLayerSelected={isLayerSelected}
