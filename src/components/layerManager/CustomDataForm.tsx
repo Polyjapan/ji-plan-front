@@ -55,7 +55,7 @@ class CustomDataForm extends React.Component<Props, State> {
 
   public render() {
     return (
-      <Form className="mt-3 mb-3">
+      <Form className="mt-3 pb-3">
         <Form.Row>
           <Col>
             <Form.Control

@@ -2,6 +2,8 @@ import ElementActionTypes, {
   ADD_CUSTOM_DATA,
   SET_CUSTOM_DATA,
   SET_VISIBILITY,
+  SET_ELEMENT_FILL_COLOR,
+  SetElementFillColorPayloadType,
   AddCustomDataPayloadType,
   SetCustomDataPayloadType,
   SetVisibilityPayloadType,
@@ -27,4 +29,10 @@ export const setVisibility = (
   payload: SetVisibilityPayloadType
 ): ElementAction => (dispatch): void => {
   dispatch({ type: SET_VISIBILITY, payload });
+};
+
+export const setElementFillColor = (
+  payload: SetElementFillColorPayloadType
+): ElementAction => (dispatch): void => {
+  dispatch({ type: SET_ELEMENT_FILL_COLOR, payload });
 };

@@ -13,6 +13,7 @@ import ElementActionTypes, {
   ADD_CUSTOM_DATA,
   SET_CUSTOM_DATA,
   SET_VISIBILITY,
+  SET_ELEMENT_FILL_COLOR,
 } from "../types/ElementActionTypes";
 import { SHAPES } from "../config/constants";
 
@@ -142,6 +143,11 @@ export function layerReducer(
         ["layers", layerId, "elements", index, "isVisible"],
         visibility
       );
+    }
+    case SET_ELEMENT_FILL_COLOR: {
+      const { color, id: elementId, layerId } = payload;
+      const index = findElementById(state, layerId, elementId);
+      return state.setIn(["layers", layerId, "elements", index, "fill"], color);
     }
     default:
       console.log("action.type", type);

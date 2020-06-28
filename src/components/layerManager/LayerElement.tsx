@@ -1,17 +1,19 @@
 import React from "react";
 import { connect, ConnectedProps } from "react-redux";
 import Form from "react-bootstrap/Form";
+import { SketchPicker, ColorResult } from "react-color";
 import Element from "../../classes/Element";
 import CustomDataForm from "./CustomDataForm";
 import PropertyInput from "./PropertyInput";
 import visibilityIcon from "../../images/visibilityIcon.png";
-import { setVisibility } from "../../actions/element";
+import { setVisibility, setElementFillColor } from "../../actions/element";
 import { RootState } from "../../reducers";
 import { selectElement } from "../../actions/layers";
 
 const mapDispatchToProps = {
   dispatchSetVisibility: setVisibility,
   dispatchSelectElement: selectElement,
+  dispatchSetElementFillColor: setElementFillColor,
 };
 
 const mapStateToProps = ({}: RootState) => ({});
@@ -25,9 +27,17 @@ type Props = PropsFromRedux & {
   layerId: number;
   isSelected: boolean;
 };
-type State = {};
+type State = {
+  displayColorPicker: boolean;
+  currentColor: string;
+};
 
 class LayerElement extends React.Component<Props, State> {
+  state: State = {
+    displayColorPicker: false,
+    currentColor: this.props.element.get("fill"),
+  };
+
   toggleVisibility = () => {
     const { layerId, dispatchSetVisibility, element } = this.props;
     const visibility = element.get("isVisible");
@@ -42,6 +52,41 @@ class LayerElement extends React.Component<Props, State> {
     const { dispatchSelectElement, element } = this.props;
     const id = element.get("id");
     dispatchSelectElement(id);
+  };
+
+  handleChangeColor = (color: ColorResult) => {
+    this.setState({ currentColor: color.hex });
+  };
+
+  handleClose = () => {
+    const { dispatchSetElementFillColor, element, layerId } = this.props;
+    const { currentColor } = this.state;
+    this.setState({ displayColorPicker: false });
+    dispatchSetElementFillColor({
+      color: currentColor,
+      id: element.get("id"),
+      layerId,
+    });
+  };
+
+  renderSketchPickerColor = () => {
+    const { displayColorPicker, currentColor } = this.state;
+    if (displayColorPicker) {
+      return (
+        <div className="colorPickerPopUp">
+          <div className="cover" onClick={this.handleClose} />
+          <SketchPicker
+            color={currentColor}
+            onChangeComplete={this.handleChangeColor}
+          />
+        </div>
+      );
+    }
+  };
+
+  toggleSketchPicker = () => {
+    const { displayColorPicker } = this.state;
+    this.setState({ displayColorPicker: !displayColorPicker });
   };
 
   render() {
@@ -67,6 +112,13 @@ class LayerElement extends React.Component<Props, State> {
           />
         </div>
         <div className="name">{element.get("name")}</div>
+        <div
+          className="backgroundColor"
+          style={{ backgroundColor: element.get("fill") }}
+          onClick={this.toggleSketchPicker}
+        ></div>
+
+        {this.renderSketchPickerColor()}
 
         <Form>
           {!customData.isEmpty() &&
