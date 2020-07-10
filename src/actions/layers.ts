@@ -1,5 +1,6 @@
 import LayerActionTypes, {
   ADD_ELEMENT,
+  GET_PLAN,
   SET_SELECTED_LAYER,
   TRANSFORM_ELEMENT,
   MOVE_ELEMENT,
@@ -10,8 +11,18 @@ import LayerActionTypes, {
 import { ThunkAction } from "redux-thunk";
 import { RootState } from "../reducers";
 import { SHAPES } from "../config/constants";
-import { RectangleProps, CircleProps, TextProps } from "../classes/Element";
+import Element, {
+  RectangleProps,
+  CircleProps,
+  TextProps,
+} from "../classes/Element";
 import { generateRandomId } from "../utils/utils";
+import {
+  saveElement,
+  getPlan as getPlanCall,
+  patchElement,
+} from "../api/requests";
+import { transformToElement } from "../utils/apiToRedux";
 
 // export const getElements = () => (dispatch: Dispatch<LayerActionTypes>) => {
 //   dispatch({ type: GET_ELEMENTS });
@@ -19,18 +30,28 @@ import { generateRandomId } from "../utils/utils";
 
 type LayerAction = ThunkAction<void, RootState, null, LayerActionTypes>;
 
+export const getPlan = (planId: number): LayerAction => (dispatch): void => {
+  getPlanCall(planId).then((res: any) => {
+    // transform return into redux elements
+    const plan = transformToElement(res[0]);
+    dispatch({ type: GET_PLAN, payload: plan });
+  });
+};
+
 export const addElement = ({
   shape,
   x,
   y,
+  layerName,
 }: {
   shape: string;
   x: number;
   y: number;
+  layerName: string;
 }): LayerAction => (dispatch): void => {
   const id = generateRandomId();
 
-  let element;
+  let element: Element = new RectangleProps();
   switch (shape) {
     case SHAPES.RECTANGLE:
       element = new RectangleProps({ id, x, y });
@@ -50,7 +71,16 @@ export const addElement = ({
     return;
   }
 
+  // dispatch element
   dispatch({ type: ADD_ELEMENT, payload: { element } });
+
+  // save element in db
+  // saveElement(element, layerName).then((res: any) => {
+  //   // wait for element to be saved to set pk in redux
+  //   // const {pk} = res.return;
+  //   // const elementWithPk = {pk, ...element}
+  //   // dispatch({ type: ADD_ELEMENT, payload: { element } });
+  // });
 };
 
 export const setSelectedLayer = (idx: number): LayerAction => (
@@ -69,6 +99,7 @@ export const transformElement = (
   payload: TransformElementPayloadType
 ): LayerAction => (dispatch): void => {
   dispatch({ type: TRANSFORM_ELEMENT, payload });
+  patchElement(payload);
 };
 
 export const selectElement = (rectId: string | null): LayerAction => (

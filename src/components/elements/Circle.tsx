@@ -100,7 +100,7 @@ const CircleEl = ({
           node.scaleX(1);
           node.scaleY(1);
           onTransform({
-            ...shapeProps,
+            ...shapeProps.toJS(),
             x: node.x(),
             y: node.y(),
             // set minimal value

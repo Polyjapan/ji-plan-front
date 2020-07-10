@@ -8,6 +8,7 @@ import LayerActionTypes, {
   MOVE_ELEMENT,
   TRANSFORM_ELEMENT,
   SET_SELECTED_ELEMENT,
+  GET_PLAN,
 } from "../types/LayerActionTypes";
 import ElementActionTypes, {
   ADD_CUSTOM_DATA,
@@ -82,6 +83,14 @@ export function layerReducer(
 ): LayerState {
   const { type, payload } = action;
   switch (type) {
+    case GET_PLAN: {
+      const { elements } = payload;
+      const selectedLayer = state.getIn(["selected", "layer"]).valueOf();
+      return state.setIn(
+        ["layers", selectedLayer, "elements"],
+        List<Element>(elements)
+      );
+    }
     case ADD_ELEMENT: {
       const selectedLayer = state.getIn(["selected", "layer"]).valueOf();
       const { element } = payload;
