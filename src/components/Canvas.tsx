@@ -73,7 +73,7 @@ class Canvas extends React.Component<Props, State> {
   };
 
   onWheelHandler = (e: any) => {
-    const { dispatchSetStageScale } = this.props;
+    const { dispatchSetStageScale, dispatchSetStageOffset } = this.props;
     const { scale, onWheelIteration } = this.state;
     const target = e.target;
     const stage = target.getStage();
@@ -99,13 +99,20 @@ class Canvas extends React.Component<Props, State> {
     this.setState({ onWheelIteration: onWheelIteration + 1 });
     if (onWheelIteration % 10 == 0) {
       dispatchSetStageScale({ scale: newScale });
+
+      // zoom change offset
+      const { x, y } = stage.attrs;
+      dispatchSetStageOffset({ x, y });
     }
   };
 
   onDragEnd = (evt: any) => {
-    const { dispatchSetStageOffset } = this.props;
-    const { x, y } = evt.target.attrs;
-    dispatchSetStageOffset({ x, y });
+    const { id } = evt.target.attrs;
+    if (id === "stage") {
+      const { dispatchSetStageOffset } = this.props;
+      const { x, y } = evt.target.attrs;
+      dispatchSetStageOffset({ x, y });
+    }
   };
 
   public render() {
@@ -129,6 +136,7 @@ class Canvas extends React.Component<Props, State> {
     return (
       <>
         <Stage
+          id="stage"
           width={window.innerWidth}
           height={window.innerHeight}
           onMouseDown={this.checkDeselect}

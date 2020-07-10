@@ -1,8 +1,4 @@
-// todo: at some point, delete
-export const CORS_PROXY = "https://cors-anywhere.herokuapp.com/";
-
-// todo: move to env file
-export const ENDPOINT = CORS_PROXY + "https://plan.japan-impact.ch/plan";
+export const ENDPOINT = `${process.env.REACT_APP_CORS_PROXY}/${process.env.REACT_APP_ENDPOINT}`;
 
 export const PRESENT = "present";
 

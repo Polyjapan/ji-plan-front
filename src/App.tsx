@@ -13,8 +13,7 @@ const mapDispatchToProps = {
   dispatchGetPlan: getPlan,
 };
 
-const mapStateToProps = ({ }: RootState) => ({
-});
+const mapStateToProps = ({}: RootState) => ({});
 
 const connector = connect(mapStateToProps, mapDispatchToProps);
 
@@ -25,7 +24,7 @@ class App extends React.Component<Props> {
   componentDidMount() {
     const { dispatchGetPlan } = this.props;
     // TODO : change plan id
-    // dispatchGetPlan(4);
+    dispatchGetPlan(4);
   }
 
   render() {
