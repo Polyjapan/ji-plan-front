@@ -10,6 +10,7 @@ import LayerActionTypes, {
   SET_SELECTED_ELEMENT,
   GET_PLAN,
   SET_LAYER_NAME,
+  SET_ELEMENT_NAME,
 } from "../types/LayerActionTypes";
 import ElementActionTypes, {
   ADD_CUSTOM_DATA,
@@ -166,6 +167,11 @@ export function layerReducer(
     case SET_LAYER_NAME: {
       const { id: layerId, name } = payload;
       return state.setIn(["layers", layerId, "name"], name);
+    }
+    case SET_ELEMENT_NAME: {
+      const { id: elementId, layerId, name } = payload;
+      const index = findElementById(state, layerId, elementId);
+      return state.setIn(["layers", layerId, "elements", index, "name"], name);
     }
     default:
       console.log("action.type", type);

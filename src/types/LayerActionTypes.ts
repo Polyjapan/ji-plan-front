@@ -10,6 +10,7 @@ export const SET_SELECTED_ELEMENT = "SET_SELECTED_ELEMENT";
 export const TRANSFORM_ELEMENT = "TRANSFORM_ELEMENT";
 export const GET_PLAN = "GET_PLAN";
 export const SET_LAYER_NAME = "SET_LAYER_NAME";
+export const SET_ELEMENT_NAME = "SET_ELEMENT_NAME";
 
 type LayerIdType = number;
 
@@ -71,6 +72,17 @@ interface SetLayerNameAction {
   payload: SetLayerNamePayloadType;
 }
 
+export type SetElementNamePayloadType = {
+  id: string;
+  name: string;
+  layerId: LayerIdType;
+};
+
+interface SetElementNameAction {
+  type: typeof SET_ELEMENT_NAME;
+  payload: SetElementNamePayloadType;
+}
+
 export type TransformElementPayloadType = {
   id: string;
   width: string;
@@ -99,6 +111,7 @@ type LayerActionTypes =
   | SelectElementAction
   | MoveElementAction
   | TransformElementAction
-  | SetLayerNameAction;
+  | SetLayerNameAction
+  | SetElementNameAction;
 
 export default LayerActionTypes;

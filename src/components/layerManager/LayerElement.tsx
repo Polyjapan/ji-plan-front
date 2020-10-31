@@ -8,12 +8,14 @@ import PropertyInput from "./PropertyInput";
 import visibilityIcon from "../../images/visibilityIcon.png";
 import { setVisibility, setElementFillColor } from "../../actions/element";
 import { RootState } from "../../reducers";
-import { selectElement } from "../../actions/layers";
+import { selectElement, setElementName } from "../../actions/layers";
+import EditableField from "./EditableField";
 
 const mapDispatchToProps = {
   dispatchSetVisibility: setVisibility,
   dispatchSelectElement: selectElement,
   dispatchSetElementFillColor: setElementFillColor,
+  dispatchSetElementName: setElementName,
 };
 
 const mapStateToProps = ({}: RootState) => ({});
@@ -30,12 +32,16 @@ type Props = PropsFromRedux & {
 type State = {
   displayColorPicker: boolean;
   currentColor: string;
+  elementName: string;
+  nameEdition: boolean;
 };
 
 class LayerElement extends React.Component<Props, State> {
   state: State = {
     displayColorPicker: false,
     currentColor: this.props.element.get("fill"),
+    elementName: this.props.element.get("name"),
+    nameEdition: false,
   };
 
   toggleVisibility = () => {
@@ -69,6 +75,15 @@ class LayerElement extends React.Component<Props, State> {
     });
   };
 
+  editName = (newName: string) => {
+    const { dispatchSetElementName, element, layerId } = this.props;
+    dispatchSetElementName({
+      name: newName,
+      id: element.get("id"),
+      layerId,
+    });
+  };
+
   renderSketchPickerColor = () => {
     const { displayColorPicker, currentColor } = this.state;
     if (displayColorPicker) {
@@ -90,7 +105,7 @@ class LayerElement extends React.Component<Props, State> {
   };
 
   render() {
-    const { element, layerId, isSelected } = this.props;
+    const { element, layerId, isSelected, dispatchSetElementName } = this.props;
     const customData = element.get("customData");
     const id = element.get("id");
     return (
@@ -111,7 +126,12 @@ class LayerElement extends React.Component<Props, State> {
             onClick={this.toggleVisibility}
           />
         </div>
-        <div className="name">{element.get("name")}</div>
+        <EditableField
+          tag="div"
+          text={element.get("name")}
+          onSave={this.editName}
+          className="name"
+        />
         <div
           className="backgroundColor"
           style={{ backgroundColor: element.get("fill") }}

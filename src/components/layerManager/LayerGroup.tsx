@@ -10,6 +10,7 @@ import { setLayerName, setSelectedLayer } from "../../actions/layers";
 import LayerElement from "./LayerElement";
 import HideShowButton from "./HideShowButton";
 import { RootState } from "../../reducers";
+import EditableField from "./EditableField";
 
 const mapDispatchToProps = {
   dispatchSetSelectedLayer: setSelectedLayer,
@@ -53,18 +54,9 @@ class LayerGroup extends React.Component<Props, State> {
     this.setState({ open: !open });
   };
 
-  editName = () => {
-    this.setState({ nameEdition: true });
-  };
-
-  onChangeName = (e: any) => {
-    this.setState({ layerName: e.target.value });
-  };
-
-  endEditName = () => {
-    const { layerName } = this.state;
+  editName = (newName: string) => {
     const { dispatchSetLayerName, id } = this.props;
-    dispatchSetLayerName({ name: layerName, id });
+    dispatchSetLayerName({ name: newName, id });
     this.setState({ nameEdition: false });
   };
 
@@ -90,16 +82,11 @@ class LayerGroup extends React.Component<Props, State> {
             id={elementsId}
           />
 
-          {nameEdition ? (
-            <input
-              autoFocus
-              onBlur={this.endEditName}
-              onChange={this.onChangeName}
-              value={layerName}
-            />
-          ) : (
-            <h4 onDoubleClick={this.editName}>{layerName}</h4>
-          )}
+          <EditableField
+            tag="h4"
+            text={layer.get("name")}
+            onSave={this.editName}
+          />
         </div>
 
         <Collapse in={open}>
