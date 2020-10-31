@@ -6,7 +6,7 @@ import Background from "./Background";
 import Rectangle from "./elements/Rectangle";
 import Circle from "./elements/Circle";
 import Text, { TextProps } from "./elements/Text";
-import { PRESENT, SHAPES } from "../config/constants";
+import { PRESENT, SHAPES, ZOOM_POWER } from "../config/constants";
 import Element, { CircleProps } from "../classes/Element";
 import LayerClass from "../classes/Layer";
 import {
@@ -85,7 +85,10 @@ class Canvas extends React.Component<Props, State> {
       y: stage.getPointerPosition().y / oldScale - stage.y() / oldScale,
     };
 
-    const newScale = e.evt.deltaY > 0 ? oldScale * scale : oldScale / scale;
+    const newScale =
+      e.evt.deltaY > 0
+        ? oldScale * scale * ZOOM_POWER
+        : oldScale / scale / ZOOM_POWER;
     stage.scale({ x: newScale, y: newScale });
 
     const newPos = {
@@ -144,7 +147,7 @@ class Canvas extends React.Component<Props, State> {
           onDragEnd={this.onDragEnd}
           onWheel={this.onWheelHandler}
           onTransformEnd={() => {
-            console.log("weifjk");
+            console.log("stage: transform end");
           }}
           draggable
         >
@@ -164,8 +167,8 @@ class Canvas extends React.Component<Props, State> {
                   }
 
                   const isSelected = elementId === selectedElementId;
-
-                  switch (element.get("shape") as any) {
+                  const shape = element.get("shape");
+                  switch (shape) {
                     case SHAPES.RECTANGLE:
                       return (
                         <Rectangle
@@ -234,7 +237,7 @@ class Canvas extends React.Component<Props, State> {
                       );
 
                     default:
-                      console.log("wef");
+                      console.log(`unhandled shape : ${shape}`);
                       return null;
                   }
                 })}

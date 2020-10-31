@@ -22,7 +22,6 @@ export function canvasReducer(
   const { type, payload } = action;
   switch (type) {
     case SET_STAGE_OFFSET: {
-      console.log("wjiekfdm");
       return state.setIn(["stage", "offset"], payload);
     }
     case SET_STAGE_SCALE: {

@@ -34,7 +34,10 @@ class Toolbar extends React.Component<Props> {
 
     const layerName = currentLayer;
 
-    dispatchAddElement({ shape, x, y, layerName });
+    // build default name
+    const name = shape.toLowerCase();
+
+    dispatchAddElement({ shape, x, y, layerName, name });
   };
 
   public render() {

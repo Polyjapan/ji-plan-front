@@ -1,6 +1,7 @@
 import React from "react";
 import { List } from "immutable";
 import { connect, ConnectedProps } from "react-redux";
+import Draggable from "react-draggable";
 import { PRESENT } from "../../config/constants";
 import LayerClass from "../../classes/Layer";
 import "./LayerManager.css";
@@ -34,11 +35,13 @@ class LayerManager extends React.Component<Props> {
     }
 
     return (
-      <div id="layerManager">
-        {layers.map((layer: LayerClass, i: number) => (
-          <LayerGroup key={layer.get("name")} layer={layer} id={i} />
-        ))}
-      </div>
+      <Draggable>
+        <div id="layerManager">
+          {layers.map((layer: LayerClass, i: number) => (
+            <LayerGroup key={layer.get("name")} layer={layer} id={i} />
+          ))}
+        </div>
+      </Draggable>
     );
   }
 }

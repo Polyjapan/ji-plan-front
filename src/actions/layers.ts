@@ -43,24 +43,26 @@ export const addElement = ({
   x,
   y,
   layerName,
+  name,
 }: {
   shape: string;
   x: number;
   y: number;
   layerName: string;
+  name: string;
 }): LayerAction => (dispatch): void => {
   const id = generateRandomId();
 
   let element: Element = new RectangleProps();
   switch (shape) {
     case SHAPES.RECTANGLE:
-      element = new RectangleProps({ id, x, y });
+      element = new RectangleProps({ id, x, y, name });
       break;
     case SHAPES.CIRCLE:
-      element = new CircleProps({ id, x, y, fill: "blue" });
+      element = new CircleProps({ id, x, y, fill: "blue", name });
       break;
     case SHAPES.TEXT:
-      element = new TextProps({ id, x, y });
+      element = new TextProps({ id, x, y, name });
       break;
     default:
       break;

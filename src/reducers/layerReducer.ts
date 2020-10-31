@@ -131,7 +131,6 @@ export function layerReducer(
     case ADD_CUSTOM_DATA: {
       const { key, value, id: elementId, layerId } = payload;
       const index = findElementById(state, layerId, elementId);
-      console.log("index", index);
       return state.setIn(
         ["layers", layerId, "elements", index, "customData", key],
         value
@@ -140,7 +139,6 @@ export function layerReducer(
     case SET_CUSTOM_DATA: {
       const { key, value, id: elementId, layerId } = payload;
       const index = findElementById(state, layerId, elementId);
-      console.log("index", index);
       return state.setIn(
         ["layers", layerId, "elements", index, "customData", key],
         value

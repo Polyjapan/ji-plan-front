@@ -12,3 +12,5 @@ export const TAGS = {
   OBJECT: "object",
   ZONE: "zone",
 };
+
+export const ZOOM_POWER = 1.1;
