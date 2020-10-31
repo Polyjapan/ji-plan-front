@@ -7,6 +7,8 @@ import LayerActionTypes, {
   SET_SELECTED_ELEMENT,
   MoveElementPayloadType,
   TransformElementPayloadType,
+  SetLayerNamePayloadType,
+  SET_LAYER_NAME,
 } from "../types/LayerActionTypes";
 import { ThunkAction } from "redux-thunk";
 import { RootState } from "../reducers";
@@ -108,4 +110,10 @@ export const selectElement = (rectId: string | null): LayerAction => (
   dispatch
 ): void => {
   dispatch({ type: SET_SELECTED_ELEMENT, payload: rectId });
+};
+
+export const setLayerName = (payload: SetLayerNamePayloadType): LayerAction => (
+  dispatch
+): void => {
+  dispatch({ type: SET_LAYER_NAME, payload });
 };

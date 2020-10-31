@@ -9,6 +9,9 @@ export const MOVE_ELEMENT = "MOVE_ELEMENT";
 export const SET_SELECTED_ELEMENT = "SET_SELECTED_ELEMENT";
 export const TRANSFORM_ELEMENT = "TRANSFORM_ELEMENT";
 export const GET_PLAN = "GET_PLAN";
+export const SET_LAYER_NAME = "SET_LAYER_NAME";
+
+type LayerIdType = number;
 
 export type GetPlanPayloadType = {
   elements: Element[];
@@ -39,7 +42,7 @@ interface RemoveElementAction {
 
 interface SelectLayerAction {
   type: typeof SET_SELECTED_LAYER;
-  payload: number;
+  payload: LayerIdType;
 }
 
 interface SelectElementAction {
@@ -56,6 +59,16 @@ export type MoveElementPayloadType = {
 interface MoveElementAction {
   type: typeof MOVE_ELEMENT;
   payload: MoveElementPayloadType;
+}
+
+export type SetLayerNamePayloadType = {
+  id: LayerIdType;
+  name: string;
+};
+
+interface SetLayerNameAction {
+  type: typeof SET_LAYER_NAME;
+  payload: SetLayerNamePayloadType;
 }
 
 export type TransformElementPayloadType = {
@@ -75,7 +88,7 @@ export type AddCustomDataPayloadType = {
   key: string;
   value: string;
   id: string;
-  layerId: number;
+  layerId: LayerIdType;
 };
 
 type LayerActionTypes =
@@ -85,6 +98,7 @@ type LayerActionTypes =
   | SelectLayerAction
   | SelectElementAction
   | MoveElementAction
-  | TransformElementAction;
+  | TransformElementAction
+  | SetLayerNameAction;
 
 export default LayerActionTypes;

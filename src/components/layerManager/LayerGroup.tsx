@@ -6,13 +6,14 @@ import { connect, ConnectedProps } from "react-redux";
 import { PRESENT } from "../../config/constants";
 import Element from "../../classes/Element";
 import "./LayerManager.css";
-import { setSelectedLayer } from "../../actions/layers";
+import { setLayerName, setSelectedLayer } from "../../actions/layers";
 import LayerElement from "./LayerElement";
 import HideShowButton from "./HideShowButton";
 import { RootState } from "../../reducers";
 
 const mapDispatchToProps = {
   dispatchSetSelectedLayer: setSelectedLayer,
+  dispatchSetLayerName: setLayerName,
 };
 
 const mapStateToProps = ({ layers }: RootState) => ({
@@ -31,6 +32,8 @@ type Props = PropsFromRedux & {
 
 type State = {
   open: boolean;
+  nameEdition: boolean;
+  layerName: string;
 };
 
 class LayerGroup extends React.Component<Props, State> {
@@ -40,7 +43,9 @@ class LayerGroup extends React.Component<Props, State> {
   };
 
   state = {
+    layerName: this.props.layer.get("name"), // necessary to avoid dispatch update when editing
     open: true,
+    nameEdition: false,
   };
 
   handleShowHideOnClick = () => {
@@ -48,9 +53,24 @@ class LayerGroup extends React.Component<Props, State> {
     this.setState({ open: !open });
   };
 
+  editName = () => {
+    this.setState({ nameEdition: true });
+  };
+
+  onChangeName = (e: any) => {
+    this.setState({ layerName: e.target.value });
+  };
+
+  endEditName = () => {
+    const { layerName } = this.state;
+    const { dispatchSetLayerName, id } = this.props;
+    dispatchSetLayerName({ name: layerName, id });
+    this.setState({ nameEdition: false });
+  };
+
   render() {
     const { layer, selected, id, selectedElement } = this.props;
-    const { open } = this.state;
+    const { open, nameEdition, layerName } = this.state;
 
     const elementsId = `layer-elements-${id}`;
 
@@ -69,7 +89,17 @@ class LayerGroup extends React.Component<Props, State> {
             open={open}
             id={elementsId}
           />
-          <h4>{layer.get("name")}</h4>
+
+          {nameEdition ? (
+            <input
+              autoFocus
+              onBlur={this.endEditName}
+              onChange={this.onChangeName}
+              value={layerName}
+            />
+          ) : (
+            <h4 onDoubleClick={this.editName}>{layerName}</h4>
+          )}
         </div>
 
         <Collapse in={open}>

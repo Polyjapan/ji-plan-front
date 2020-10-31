@@ -35,13 +35,11 @@ class LayerManager extends React.Component<Props> {
     }
 
     return (
-      <Draggable>
-        <div id="layerManager">
-          {layers.map((layer: LayerClass, i: number) => (
-            <LayerGroup key={layer.get("name")} layer={layer} id={i} />
-          ))}
-        </div>
-      </Draggable>
+      <div id="layerManager">
+        {layers.map((layer: LayerClass, i: number) => (
+          <LayerGroup key={layer.get("name")} layer={layer} id={i} />
+        ))}
+      </div>
     );
   }
 }
